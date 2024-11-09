@@ -1,5 +1,5 @@
-# frontend/Dockerfile
-FROM node:18-alpine
+# Stage 1: Build the React app
+FROM node:18-alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -14,7 +14,14 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Serve the app with a lightweight web server
-RUN npm install -g serve
-EXPOSE 3000
-CMD ["serve", "-s", "build"]
+# Stage 2: Serve the app with Nginx
+FROM nginx:alpine
+
+# Copy the build files from the builder stage to the Nginx web root
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
