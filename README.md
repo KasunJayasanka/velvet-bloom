@@ -193,6 +193,49 @@ We welcome contributions! Please follow our [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ---
 
+# API Guide
+
+## Image Upload API
+
+### Endpoint
+
+**POST** `/images/upload`
+
+Uploads an image file to Google Cloud Storage and returns the URL where the image is accessible.
+
+### Request
+
+- **Content-Type**: `multipart/form-data`
+
+#### Parameters
+
+- `file` (MultipartFile): The image file to be uploaded.
+
+### Example Request
+
+```bash
+curl -X POST -F "file=@/path/to/your/image.jpg" http://localhost:8080/images/upload
+```
+
+### Response
+A JSON object containing the URL for the uploaded image.
+
+ - Response Format
+
+```bash
+{
+    "imgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/uniqueFileName.jpg"
+}
+```
+
+### Error Handling
+
+- If the upload fails, the API returns an HTTP 500 status code with an empty response body. Common issues may include:
+  - Incorrect file format.
+  - Insufficient permissions for the service account in Google Cloud Storage.
+
+---
+
 ## License
 
 This project is licensed under the MIT License.
