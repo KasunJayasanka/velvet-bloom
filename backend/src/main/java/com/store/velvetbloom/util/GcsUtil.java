@@ -26,18 +26,7 @@ public class GcsUtil {
     public GcsUtil(Storage storage) {
         this.storage = storage;
     }
-
     
-//    public String uploadFile(InputStream fileStream, String fileName) {
-//        // Prefix the filename with "images/" to upload into the images folder within the bucket
-//        String uniqueFileName = "images/" + UUID.randomUUID().toString() + "_" + fileName;
-//        Bucket bucket = storage.get(bucketName);
-//        Blob blob = bucket.create(uniqueFileName, fileStream, "image/jpeg");
-//
-//        // Construct the URL, ensuring no duplicate slashes
-//        return String.format("%s/%s", cdnUrl, uniqueFileName);
-//    }
-
     public String uploadFile(InputStream fileStream, String fileName) {
         // Add "images/" prefix to upload into the images folder within the bucket
         String uniqueFileName = "images/" + UUID.randomUUID().toString() + "_" + fileName;

@@ -6,7 +6,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend/src/main/resources/serviceAccountKey.json:/app/src/main/resources/serviceAccountKey.json
       - ./backend/src/main/resources/gcsServiceAccountKey.json:/app/src/main/resources/gcsServiceAccountKey.json
 
     ports:
