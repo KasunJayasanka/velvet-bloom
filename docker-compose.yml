@@ -5,10 +5,15 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    volumes:
+      - ./backend/src/main/resources/serviceAccountKey.json:/app/src/main/resources/serviceAccountKey.json
+      - ./backend/src/main/resources/gcsServiceAccountKey.json:/app/src/main/resources/gcsServiceAccountKey.json
+
     ports:
       - "8080:8080"
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/velvetbloom
+      - SPRING_PROFILES_ACTIVE=test
 
   frontend:
     build:
