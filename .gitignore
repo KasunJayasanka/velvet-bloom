@@ -7,7 +7,6 @@ backend/target
 
 # Environment files
 frontend/.env.local
-backend/src/main/resources/serviceAccountKey.json
 
 # OS generated files
 .DS_Store
