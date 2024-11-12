@@ -22,7 +22,7 @@ function Sidebar() {
         width: 250,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: 250,
+          width: 270,
           backgroundColor: '#BE78F0', 
           color: 'white',
           border: 'none',
