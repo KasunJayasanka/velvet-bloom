@@ -1,13 +1,15 @@
 // TestController.java
-package com.store.velvetbloom;
+package com.store.velvetbloom.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.store.velvetbloom.repository.TestRepository;
+
 @RestController
-@Profile("test")  // Only activates this controller in the 'test' profile
+@Profile("test") // Only activates this controller in the 'test' profile
 public class TestController {
 
     @Autowired

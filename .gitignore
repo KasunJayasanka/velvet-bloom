@@ -11,3 +11,5 @@ frontend/.env.local
 # OS generated files
 .DS_Store
 Thumbs.db
+
+backend/src/main/resources/gcsServiceAccountKey.json
