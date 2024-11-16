@@ -19,6 +19,15 @@ services:
     environment:
       - NEXT_PUBLIC_BACKEND_URL=http://backend:8080
 
+  admin:
+      build:
+        context: ./admin
+        dockerfile: Dockerfile
+      ports:
+        - "3001:80"
+      environment:
+        - NEXT_PUBLIC_BACKEND_URL=http://backend:8080
+
   mongo:
     image: mongo:latest
     ports:
