@@ -8,12 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Component
 public class GcsUtil {
 
-    private static final Logger LOGGER = Logger.getLogger(GcsUtil.class.getName());
 
     private final Storage storage;
 
