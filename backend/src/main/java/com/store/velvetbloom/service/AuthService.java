@@ -41,7 +41,7 @@ public class AuthService {
 
         // Set default role if not provided
         if (user.getRole() == null) {
-            user.setRole("USER"); // Default to USER
+            user.setRole("CUSTOMER"); // Default to CUSTOMER
         }
 
         // Hash the password before saving
