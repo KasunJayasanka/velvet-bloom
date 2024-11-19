@@ -55,7 +55,7 @@ const ProductInfo = ({ productInfo }) => {
   })();
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-10 bg-softpurple">
       <h2 className="text-4xl font-semibold">{productInfo.productName}</h2>
       <p className="text-xl font-semibold">${productInfo.price}</p>
       
@@ -124,10 +124,11 @@ const ProductInfo = ({ productInfo }) => {
         onClick={handleAddToCart}
         disabled={!selectedSize}
         className={`
-          w-full py-4 duration-300 text-white text-lg font-titleFont
-          ${selectedSize 
-            ? 'bg-primeColor hover:bg-black' 
-            : 'bg-gray-400 cursor-not-allowed'}
+             w-full py-4 text-center text-purple-700 text-lg font-titleFont
+    ${selectedSize 
+      ? 'bg-purple-300 hover:bg-purple-400' 
+      : 'bg-gray-300 cursor-not-allowed'}
+    rounded-full duration-300
         `}
       >
         Add to Cart

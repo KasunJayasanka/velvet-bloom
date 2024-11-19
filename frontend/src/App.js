@@ -18,7 +18,7 @@ import Shop from "./pages/Shop/Shop";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="bg-softpurple">
       <Header />
       
       <ScrollRestoration />
