@@ -16,6 +16,9 @@ import Home from "./pages/Home/Home";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Shop from "./pages/Shop/Shop";
 import Login from "./pages/Login&SignUp/Login";
+import Profile from "./pages/Profile/Profile";
+import CustomerDetails from "./pages/Profile/CustomerDetails";
+import ChangePassword from "./pages/Profile/ChangePassword";
 
 const Layout = () => {
   return (
@@ -44,7 +47,11 @@ const router = createBrowserRouter(
         <Route path="/cart" element={<Cart />}></Route>
       </Route>
       <Route path="/signin" element={<Login />}></Route>
+      <Route path="/profile" element={<Profile />}></Route>
+      <Route path="/customerdetails" element={<CustomerDetails />}></Route>
+      <Route path="/changepassword" element={<ChangePassword />}></Route>
     </Route>
+    
   )
 );
 
