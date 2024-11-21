@@ -2,7 +2,8 @@ import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Login"; 
-import MyOrders from './MyOrders'
+import MyOrdersOngoing from './MyOrdersOngoing'
+import MyOrdersAll from './MyOrdersAll';
 
 function App() {
   // return (
@@ -17,7 +18,7 @@ function App() {
   //     </div>
   //   </Router>
   // );
-  return <MyOrders />;
+  return <MyOrdersAll />;
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import React from "react";
-import "./MyOrders.css";
+import "./MyOrdersOngoing.css";
 
 // Order Data (can be moved to a separate file if needed)
 const orders = [
@@ -56,10 +56,11 @@ const OrderCard = ({ order }) => (
   </div>
 );
 
-const MyOrders = () => {
+const MyOrdersOngoing = () => {
   return (
     <div className="order-tracking">
       <div className="sidebar">
+      <div className="divider"></div>
         <h3>My Orders</h3>
         <div className="divider"></div>
         <link
@@ -86,4 +87,4 @@ const MyOrders = () => {
   );
 };
 
-export default MyOrders;
+export default MyOrdersOngoing;
