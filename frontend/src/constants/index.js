@@ -125,10 +125,230 @@ export const paginationItems = [
     "unitPrice": 30,
     "productCount": 120,
     "lowStockCount": 15,
-    "mainImgUrl": "https://example.com/images/dress-main.jpg",
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
-      "https://example.com/images/dress-front.jpg",
-      "https://example.com/images/dress-back.jpg"
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
+    ],
+    "categories": ["Clothing", "Women", "Dresses"],
+    "variety": [
+      {
+        "size": "S",
+        "colors": [
+          { "color": "Pink", "count": 40 },
+          { "color": "White", "count": 30 }
+        ]
+      },
+      {
+        "size": "M",
+        "colors": [
+          { "color": "Yellow", "count": 20 }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "customerID": "652e5d4f2b1e2f1a87654322",
+        "fName": "Emily",
+        "description": "Beautiful dress, so comfortable and stylish!"
+      },
+      {
+        "customerID": "652e4d3f1b1e1f0a76543210",
+        "fName": "Sophia",
+        "description": "Love the design and the fabric is so soft."
+      }
+    ],
+    "createdAt": "2024-11-17T12:00:00Z",
+    "updatedAt": "2024-11-17T12:00:00Z"
+  },
+  {
+    "_id": { "$oid": "673bca3d94cb650c9b688e14" },
+    "productName": "Summer Dress",
+    "description": "A lightweight and breathable summer dress for sunny days.",
+    "brand": "ChicStyle",
+    "discount": 20,
+    "unitPrice": 30,
+    "productCount": 120,
+    "lowStockCount": 15,
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
+    "imageGallery": [
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
+    ],
+    "categories": ["Clothing", "Women", "Dresses"],
+    "variety": [
+      {
+        "size": "S",
+        "colors": [
+          { "color": "Pink", "count": 40 },
+          { "color": "White", "count": 30 }
+        ]
+      },
+      {
+        "size": "M",
+        "colors": [
+          { "color": "Yellow", "count": 20 }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "customerID": "652e5d4f2b1e2f1a87654322",
+        "fName": "Emily",
+        "description": "Beautiful dress, so comfortable and stylish!"
+      },
+      {
+        "customerID": "652e4d3f1b1e1f0a76543210",
+        "fName": "Sophia",
+        "description": "Love the design and the fabric is so soft."
+      }
+    ],
+    "createdAt": "2024-11-17T12:00:00Z",
+    "updatedAt": "2024-11-17T12:00:00Z"
+  },
+  
+  {
+    "_id": { "$oid": "673bca3d94cb650c9b688e14" },
+    "productName": "Summer Dress",
+    "description": "A lightweight and breathable summer dress for sunny days.",
+    "brand": "ChicStyle",
+    "discount": 20,
+    "unitPrice": 30,
+    "productCount": 120,
+    "lowStockCount": 15,
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
+    "imageGallery": [
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
+    ],
+    "categories": ["Clothing", "Women", "Dresses"],
+    "variety": [
+      {
+        "size": "S",
+        "colors": [
+          { "color": "Pink", "count": 40 },
+          { "color": "White", "count": 30 }
+        ]
+      },
+      {
+        "size": "M",
+        "colors": [
+          { "color": "Yellow", "count": 20 }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "customerID": "652e5d4f2b1e2f1a87654322",
+        "fName": "Emily",
+        "description": "Beautiful dress, so comfortable and stylish!"
+      },
+      {
+        "customerID": "652e4d3f1b1e1f0a76543210",
+        "fName": "Sophia",
+        "description": "Love the design and the fabric is so soft."
+      }
+    ],
+    "createdAt": "2024-11-17T12:00:00Z",
+    "updatedAt": "2024-11-17T12:00:00Z"
+  },
+  {
+    "_id": { "$oid": "673bca3d94cb650c9b688e14" },
+    "productName": "Summer Dress",
+    "description": "A lightweight and breathable summer dress for sunny days.",
+    "brand": "ChicStyle",
+    "discount": 20,
+    "unitPrice": 30,
+    "productCount": 120,
+    "lowStockCount": 15,
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
+    "imageGallery": [
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
+    ],
+    "categories": ["Clothing", "Women", "Dresses"],
+    "variety": [
+      {
+        "size": "S",
+        "colors": [
+          { "color": "Pink", "count": 40 },
+          { "color": "White", "count": 30 }
+        ]
+      },
+      {
+        "size": "M",
+        "colors": [
+          { "color": "Yellow", "count": 20 }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "customerID": "652e5d4f2b1e2f1a87654322",
+        "fName": "Emily",
+        "description": "Beautiful dress, so comfortable and stylish!"
+      },
+      {
+        "customerID": "652e4d3f1b1e1f0a76543210",
+        "fName": "Sophia",
+        "description": "Love the design and the fabric is so soft."
+      }
+    ],
+    "createdAt": "2024-11-17T12:00:00Z",
+    "updatedAt": "2024-11-17T12:00:00Z"
+  },
+  {
+    "_id": { "$oid": "673bca3d94cb650c9b688e14" },
+    "productName": "Summer Dress",
+    "description": "A lightweight and breathable summer dress for sunny days.",
+    "brand": "ChicStyle",
+    "discount": 20,
+    "unitPrice": 30,
+    "productCount": 120,
+    "lowStockCount": 15,
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
+    "imageGallery": [
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
+    ],
+    "categories": ["Clothing", "Women", "Dresses"],
+    "variety": [
+      {
+        "size": "S",
+        "colors": [
+          { "color": "Pink", "count": 40 },
+          { "color": "White", "count": 30 }
+        ]
+      },
+      {
+        "size": "M",
+        "colors": [
+          { "color": "Yellow", "count": 20 }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "customerID": "652e5d4f2b1e2f1a87654322",
+        "fName": "Emily",
+        "description": "Beautiful dress, so comfortable and stylish!"
+      },
+      {
+        "customerID": "652e4d3f1b1e1f0a76543210",
+        "fName": "Sophia",
+        "description": "Love the design and the fabric is so soft."
+      }
+    ],
+    "createdAt": "2024-11-17T12:00:00Z",
+    "updatedAt": "2024-11-17T12:00:00Z"
+  },
+  {
+    "_id": { "$oid": "673bca3d94cb650c9b688e14" },
+    "productName": "Summer Dress",
+    "description": "A lightweight and breathable summer dress for sunny days.",
+    "brand": "ChicStyle",
+    "discount": 20,
+    "unitPrice": 30,
+    "productCount": 120,
+    "lowStockCount": 15,
+    "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
+    "imageGallery": [
+      "https://storage.googleapis.com/velvet-blohttps://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpghttps://example.com/images/dress-back.jpg"
     ],
     "categories": ["Clothing", "Women", "Dresses"],
     "variety": [
@@ -164,17 +384,17 @@ export const paginationItems = [
   
     {
       "_id": { "$oid": "673bca3d94cb650c9b688e12" },
-      "productName": "Cotton T-Shirt",
+      "productName": "Cotton Hoodies",
       "description": "A comfortable cotton t-shirt suitable for everyday wear.",
       "brand": "ComfortWear",
       "discount": 10,
       "unitPrice": 20,
       "productCount": 100,
       "lowStockCount": 10,
-      "mainImgUrl": "https://example.com/images/tshirt-main.jpg",
+      "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/69a0c185-fdb9-4489-a0da-5314012d293a_hoody.webp",
       "imageGallery": [
-        "https://example.com/images/tshirt-front.jpg",
-        "https://example.com/images/tshirt-back.jpg"
+        "https://storage.googleapis.com/velvet-bloom-store/images/69a0c185-fdb9-4489-a0da-5314012d293a_hoody.webp",
+        "https://storage.googleapis.com/velvet-bloom-store/images/69a0c185-fdb9-4489-a0da-5314012d293a_hoody.webp"
       ],
       "categories": ["Clothing", "Men", "T-Shirts"],
       "variety": [

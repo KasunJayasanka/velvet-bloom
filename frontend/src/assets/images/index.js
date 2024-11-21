@@ -35,29 +35,5 @@ export {
   bannerImgOne,
   bannerImgTwo,
   bannerImgThree,
-
-  // ===================== Products start here ============
-  // New Arrivals
-  // newArrOne,
-  // newArrTwo,
-  // newArrThree,
-  // newArrFour,
-
-  // Best Sellers
-  // bestSellerOne,
-  // bestSellerTwo,
-  // bestSellerThree,
-  // bestSellerFour,
-
-  // Sprcial Offers
-  // spfOne,
-  // spfTwo,
-  // spfThree,
-  // spfFour,
-
-  // Year Product
-  // productOfTheYear,
-  // // ===================== Products End here ==============
-  // paymentCard,
   emptyCart,
 };
