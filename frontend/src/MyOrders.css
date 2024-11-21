@@ -1,0 +1,116 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FBF5FF;
+  }
+  
+  .order-tracking {
+    display: flex;
+  }
+  
+  /* Sidebar Styles */
+  .sidebar {
+    width: 20%;
+    background-color: #fff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+  }
+  
+  .sidebar h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .divider {
+    border-top: 2px dashed #ccc;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .main-content h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Filters Styles */
+  .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-text {
+    font-family: "'Abel', sans-serif";
+  }
+  
+  .filter-button {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .filter-button.active {
+    background-color: #d9c1e3;
+    color: white;
+  }
+  
+  /* Order List Styles */
+  .order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .order-card {
+    display: flex;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .order-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .order-details {
+    flex: 1;
+  }
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: gray;
+  }
+  
+  .order-info {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+    margin: 10px 0;
+  }
+  
+  .track-order-button {
+    padding: 10px 20px;
+    background-color: #c1a0e3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
