@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class AuthControllerTest {
+public class AuthControllerTest {
 
     @Mock
     private AuthService authService;
@@ -34,7 +34,7 @@ class AuthControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-    
+
     @Test
     void testLoginWithAdminRole() {
         // Mock input

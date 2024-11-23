@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
-class CustomerControllerTest {
+public class CustomerControllerTest {
 
     @Mock
     private CustomerService customerService;

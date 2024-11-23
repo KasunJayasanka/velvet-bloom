@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith(MockitoExtension.class)
-class CategoryControllerTest {
+public class CategoryControllerTest {
 
     @Mock
     private CategoryService categoryService;

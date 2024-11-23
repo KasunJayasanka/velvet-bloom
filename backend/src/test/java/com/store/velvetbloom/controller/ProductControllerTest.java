@@ -1,257 +1,199 @@
-//package com.store.velvetbloom.controller;
-//
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.store.velvetbloom.model.Product;
-//import com.store.velvetbloom.service.ProductService;
-//import com.store.velvetbloom.util.JwtUtil;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.context.annotation.Import;
-//import org.springframework.http.MediaType;
-//import org.springframework.mock.web.MockMultipartFile;
-//import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-//import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-//import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-//
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.List;
-//
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.ArgumentMatchers.eq;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-//
-//@WebMvcTest(ProductController.class)
-//@Import(TestSecurityConfig.class)
-//public class ProductControllerTest {
-//
-//    @Autowired
-//    private MockMvc mockMvc;
-//
-//    @MockBean
-//    private ProductService productService;
-//
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    private ObjectMapper objectMapper;
-//    private Product sampleProduct;
-//    private String adminToken;
-//    private String userToken;
-//
-//    @BeforeEach
-//    public void setup() {
-//        objectMapper = new ObjectMapper();
-//        adminToken = jwtUtil.generateToken("admin@test.com", "ROLE_ADMIN");
-//        userToken = jwtUtil.generateToken("user@test.com", "ROLE_USER");
-//
-//        // Initialize sample product
-//        sampleProduct = new Product();
-//        sampleProduct.setId("673bca3d94cb650c9b688e13");
-//        sampleProduct.setProductName("Running Shoes");
-//        sampleProduct.setDescription("Lightweight and durable running shoes for all terrains.");
-//        sampleProduct.setBrand("ActiveGear");
-//        sampleProduct.setDiscount(15);
-//        sampleProduct.setUnitPrice(50.0);
-//        sampleProduct.setProductCount(200);
-//        sampleProduct.setLowStockCount(20);
-//        sampleProduct.setMainImgUrl("https://example.com/images/shoes-main.jpg");
-//        sampleProduct.setImageGallery(List.of(
-//                "https://example.com/images/shoes-side.jpg",
-//                "https://example.com/images/shoes-top.jpg"
-//        ));
-//        sampleProduct.setCategories(List.of("Footwear", "Unisex", "Running"));
-//
-//        // Create varieties with proper color initialization
-//        List<Product.Variety> varieties = new ArrayList<>();
-//
-//        Product.Variety variety1 = new Product.Variety();
-//        variety1.setSize("8");
-//        List<Product.Variety.Color> colors1 = new ArrayList<>();
-//
-//        Product.Variety.Color white = new Product.Variety.Color();
-//        white.setColor("White");
-//        white.setCount(30);
-//
-//        Product.Variety.Color black = new Product.Variety.Color();
-//        black.setColor("Black");
-//        black.setCount(40);
-//
-//        colors1.add(white);
-//        colors1.add(black);
-//        variety1.setColors(colors1);
-//
-//        Product.Variety variety2 = new Product.Variety();
-//        variety2.setSize("9");
-//        List<Product.Variety.Color> colors2 = new ArrayList<>();
-//
-//        Product.Variety.Color gray = new Product.Variety.Color();
-//        gray.setColor("Gray");
-//        gray.setCount(20);
-//
-//        colors2.add(gray);
-//        variety2.setColors(colors2);
-//
-//        varieties.add(variety1);
-//        varieties.add(variety2);
-//        sampleProduct.setVariety(varieties);
-//
-//        Product.Review review = new Product.Review();
-//        review.setCustomerID("652f7d5f3c1e7f2b98765432");
-//        review.setFName("Alice");
-//        review.setDescription("Best shoes for running, highly recommend!");
-//        sampleProduct.setReviews(List.of(review));
-//
-//        sampleProduct.setCreatedAt("2024-11-18T10:30:00Z");
-//        sampleProduct.setUpdatedAt("2024-11-18T10:30:00Z");
-//    }
-//
-//    private MockMultipartHttpServletRequestBuilder addAuth(MockMultipartHttpServletRequestBuilder request, String token) {
-//        return request.header("Authorization", "Bearer " + token);
-//    }
-//
-//
-//    @Test
-//    public void testGetAllProducts() throws Exception {
-//        Mockito.when(productService.getAllProducts()).thenReturn(Collections.singletonList(sampleProduct));
-//
-//        mockMvc.perform(get("/products"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$[0].id").value(sampleProduct.getId()))
-//                .andExpect(jsonPath("$[0].productName").value(sampleProduct.getProductName()));
-//    }
-//
-//    @Test
-//    public void testGetProductById() throws Exception {
-//        Mockito.when(productService.getProductById(sampleProduct.getId())).thenReturn(sampleProduct);
-//
-//        mockMvc.perform(get("/products/{id}", sampleProduct.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.id").value(sampleProduct.getId()))
-//                .andExpect(jsonPath("$.productName").value(sampleProduct.getProductName()));
-//    }
-//
-//    @Test
-//    public void testCreateProduct_WithoutAuth_ShouldFail() throws Exception {
-//        MockMultipartFile productJson = new MockMultipartFile(
-//                "product", "", "application/json",
-//                objectMapper.writeValueAsString(sampleProduct).getBytes()
-//        );
-//
-//        MockMultipartFile mainImage = new MockMultipartFile(
-//                "mainImage", "main.jpg", "image/jpeg", "fake-image-data".getBytes()
-//        );
-//
-//        mockMvc.perform(multipart("/products")
-//                        .file(productJson)
-//                        .file(mainImage)
-//                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
-//                .andExpect(status().isUnauthorized());
-//    }
-//
-//    @Test
-//    public void testCreateProduct_WithAdminAuth_ShouldSucceed() throws Exception {
-//        MockMultipartFile productJson = new MockMultipartFile(
-//                "product", "", "application/json",
-//                objectMapper.writeValueAsString(sampleProduct).getBytes()
-//        );
-//
-//        MockMultipartFile mainImage = new MockMultipartFile(
-//                "mainImage", "main.jpg", "image/jpeg", "fake-image-data".getBytes()
-//        );
-//
-//        Mockito.when(productService.createProduct(any(Product.class), any(), any()))
-//                .thenReturn(sampleProduct);
-//
-//        mockMvc.perform(addAuth(
-//                        multipart("/products")
-//                                .file(productJson)
-//                                .file(mainImage)
-//                                .with(SecurityMockMvcRequestPostProcessors.csrf()), adminToken))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(sampleProduct.getId()))
-//                .andExpect(jsonPath("$.productName").value(sampleProduct.getProductName()));
-//    }
-//
-//    @Test
-//    public void testUpdateProduct_WithAdminAuth_ShouldSucceed() throws Exception {
-//        MockMultipartFile productJson = new MockMultipartFile(
-//                "product", "", "application/json",
-//                objectMapper.writeValueAsString(sampleProduct).getBytes()
-//        );
-//
-//        MockMultipartFile mainImage = new MockMultipartFile(
-//                "mainImage", "main.jpg", "image/jpeg", "fake-image-data".getBytes()
-//        );
-//
-//        Mockito.when(productService.updateProduct(eq(sampleProduct.getId()), any(), any(), any()))
-//                .thenReturn(sampleProduct);
-//
-//        mockMvc.perform(addAuth(
-//                        multipart("/products/{id}", sampleProduct.getId())
-//                                .file(productJson)
-//                                .file(mainImage)
-//                                .with(SecurityMockMvcRequestPostProcessors.csrf()), adminToken))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(sampleProduct.getId()))
-//                .andExpect(jsonPath("$.productName").value(sampleProduct.getProductName()));
-//    }
-//
-//    @Test
-//    public void testDeleteProduct_WithAdminAuth_ShouldSucceed() throws Exception {
-//        Mockito.doNothing().when(productService).deleteProduct(sampleProduct.getId());
-//
-//        mockMvc.perform(addAuth(
-//                        delete("/products/{id}", sampleProduct.getId())
-//                                .with(SecurityMockMvcRequestPostProcessors.csrf()), adminToken))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.message").value("Product deleted successfully"))
-//                .andExpect(jsonPath("$.productId").value(sampleProduct.getId()));
-//    }
-//
-//    @Test
-//    public void testDeleteProduct_WithUserAuth_ShouldFail() throws Exception {
-//        mockMvc.perform(addAuth(
-//                        delete("/products/{id}", sampleProduct.getId())
-//                                .with(SecurityMockMvcRequestPostProcessors.csrf()), userToken))
-//                .andExpect(status().isForbidden());
-//    }
-//
-//    @Test
-//    public void testDeleteProduct_WithoutAuth_ShouldFail() throws Exception {
-//        mockMvc.perform(delete("/products/{id}", sampleProduct.getId())
-//                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
-//                .andExpect(status().isUnauthorized());
-//    }
-//
-//    @Test
-//    public void testUpdateProduct_WithUserAuth_ShouldFail() throws Exception {
-//        MockMultipartFile productJson = new MockMultipartFile(
-//                "product", "", "application/json",
-//                objectMapper.writeValueAsString(sampleProduct).getBytes()
-//        );
-//
-//        mockMvc.perform(addAuth(
-//                        multipart("/products/{id}", sampleProduct.getId())
-//                                .file(productJson)
-//                                .with(SecurityMockMvcRequestPostProcessors.csrf()), userToken))
-//                .andExpect(status().isForbidden());
-//    }
-//
-//    @Test
-//    public void testGetProductByInvalidId_ShouldReturn404() throws Exception {
-//        Mockito.when(productService.getProductById("invalid-id")).thenReturn(null);
-//
-//        mockMvc.perform(get("/products/{id}", "invalid-id"))
-//                .andExpect(status().isNotFound());
-//    }
-//}
+package com.store.velvetbloom.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.store.velvetbloom.model.Product;
+import com.store.velvetbloom.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+
+@ExtendWith(MockitoExtension.class)
+public class ProductControllerTest {
+
+    @Mock
+    private ProductService productService;
+
+    @InjectMocks
+    private ProductController productController;
+
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        objectMapper = new ObjectMapper();
+    }
+
+    @Test
+    void testGetAllProducts() {
+        // Arrange
+        Product product1 = new Product();
+        product1.setId("1");
+        product1.setProductName("T-Shirt");
+        product1.setDescription("Cotton T-Shirt");
+
+        Product product2 = new Product();
+        product2.setId("2");
+        product2.setProductName("Jeans");
+        product2.setDescription("Denim Jeans");
+
+        List<Product> products = Arrays.asList(product1, product2);
+
+        when(productService.getAllProducts()).thenReturn(products);
+
+        // Act
+        ResponseEntity<List<Product>> response = productController.getAllProducts();
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(products, response.getBody());
+        verify(productService, times(1)).getAllProducts();
+    }
+
+    @Test
+    void testGetProductById() {
+        // Arrange
+        Product product = new Product();
+        product.setId("1");
+        product.setProductName("T-Shirt");
+        product.setDescription("Cotton T-Shirt");
+
+        when(productService.getProductById("1")).thenReturn(product);
+
+        // Act
+        ResponseEntity<Product> response = productController.getProductById("1");
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(product, response.getBody());
+        verify(productService, times(1)).getProductById("1");
+    }
+
+    @Test
+    void testCreateProduct() throws Exception {
+        // Arrange
+        Product product = new Product();
+        product.setProductName("T-Shirt");
+        product.setDescription("Cotton T-Shirt");
+        product.setUnitPrice(29.99);
+
+        MockMultipartFile mainImage = new MockMultipartFile(
+                "mainImage",
+                "test.jpg",
+                "image/jpeg",
+                "test-image".getBytes()
+        );
+
+        MockMultipartFile galleryImage = new MockMultipartFile(
+                "galleryImages",
+                "gallery.jpg",
+                "image/jpeg",
+                "gallery-image".getBytes()
+        );
+
+        List<MockMultipartFile> galleryImages = Arrays.asList(galleryImage);
+        String productJson = objectMapper.writeValueAsString(product);
+
+        Product createdProduct = new Product();
+        createdProduct.setId("1");
+        createdProduct.setProductName(product.getProductName());
+        createdProduct.setDescription(product.getDescription());
+        createdProduct.setUnitPrice(product.getUnitPrice());
+
+        when(productService.createProduct(any(Product.class), any(MockMultipartFile.class), anyList()))
+                .thenReturn(createdProduct);
+
+        // Act
+        ResponseEntity<Product> response = productController.createProduct(
+                productJson,
+                mainImage,
+                Arrays.asList(galleryImage)
+        );
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(createdProduct, response.getBody());
+        verify(productService, times(1))
+                .createProduct(any(Product.class), any(MockMultipartFile.class), anyList());
+    }
+
+    @Test
+    void testUpdateProduct() throws Exception {
+        // Arrange
+        Product product = new Product();
+        product.setProductName("Updated T-Shirt");
+        product.setDescription("Updated Cotton T-Shirt");
+        product.setUnitPrice(39.99);
+
+        MockMultipartFile mainImage = new MockMultipartFile(
+                "mainImage",
+                "updated.jpg",
+                "image/jpeg",
+                "updated-image".getBytes()
+        );
+
+        MockMultipartFile galleryImage = new MockMultipartFile(
+                "galleryImages",
+                "updated-gallery.jpg",
+                "image/jpeg",
+                "updated-gallery-image".getBytes()
+        );
+
+        String productJson = objectMapper.writeValueAsString(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setId("1");
+        updatedProduct.setProductName(product.getProductName());
+        updatedProduct.setDescription(product.getDescription());
+        updatedProduct.setUnitPrice(product.getUnitPrice());
+
+        when(productService.updateProduct(eq("1"), any(Product.class), any(MockMultipartFile.class), anyList()))
+                .thenReturn(updatedProduct);
+
+        // Act
+        ResponseEntity<Product> response = productController.updateProduct(
+                "1",
+                productJson,
+                mainImage,
+                Arrays.asList(galleryImage)
+        );
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(updatedProduct, response.getBody());
+        verify(productService, times(1))
+                .updateProduct(eq("1"), any(Product.class), any(MockMultipartFile.class), anyList());
+    }
+
+    @Test
+    void testDeleteProduct() {
+        // Arrange
+        String productId = "1";
+        doNothing().when(productService).deleteProduct(productId);
+
+        // Act
+        ResponseEntity<?> response = productController.deleteProduct(productId);
+
+        // Assert
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(
+                Map.of("message", "Product deleted successfully", "productId", productId),
+                response.getBody()
+        );
+        verify(productService, times(1)).deleteProduct(productId);
+    }
+}
