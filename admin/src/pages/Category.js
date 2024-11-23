@@ -169,7 +169,7 @@ function Category() {
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => handleOpenDeleteDialog(category)}>
-                    <DeleteIcon color="#9E4BDC" />
+                    <DeleteIcon color="error" />
                   </IconButton>
                 </TableCell>
               </TableRow>
