@@ -17,7 +17,7 @@ const Checkout = () => {
   const total = subtotal + shippingCost; 
 
   return (
-    <div className="min-h-screen bg-purple-50  px-12">
+    <div className="min-h-screen bg-purple-50  px-10">
       <Breadcrumbs title="Checkout" prevLocation="Cart" />
       <main className="container mx-auto flex flex-col lg:flex-row gap-48">
         {/* Left Section */}
