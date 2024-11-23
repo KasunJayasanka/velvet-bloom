@@ -79,6 +79,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict /admin endpoints to ADMIN role
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()
+                        .requestMatchers("/customers/**").permitAll()
+                        .requestMatchers("/carts/**").permitAll()
                         .requestMatchers("/user/**").hasRole("USER") // Restrict /user endpoints to USER role
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )

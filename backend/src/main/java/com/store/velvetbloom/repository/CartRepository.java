@@ -7,6 +7,14 @@ import java.util.Optional;
 
 public interface CartRepository extends MongoRepository<Cart, String> {
 
-    // Find the cart by customer ID
-    Optional<Cart> findByCustomer_Id(String customerId);
+    // Find a cart by the associated customer ID
+    Optional<Cart> findByCustomerID(String customerID);
+
+    // Check if a cart exists for a specific customer
+    boolean existsByCustomerID(String customerID);
+
+    // Delete a cart by customer ID
+    void deleteByCustomerID(String customerID);
+
+    
 }
