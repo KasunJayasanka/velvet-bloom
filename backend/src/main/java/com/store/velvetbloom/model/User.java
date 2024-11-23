@@ -12,7 +12,7 @@ public class User {
     private String email;
     private String mobileNo;
     private String password;
-    private String role; // Default to USER or ADMIN
+    private String role; // Default to CUSTOMER
     private String country;
     private String city;
     private String address;

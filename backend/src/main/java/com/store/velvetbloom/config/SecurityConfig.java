@@ -77,7 +77,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/signup", "/auth/create-first-admin").permitAll() // Public endpoints
                         .requestMatchers("/auth/create-admin").hasRole("ADMIN") // Restricted to ADMIN role
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict /admin endpoints to ADMIN role
-                        
+                        .requestMatchers("/products/**").permitAll()
+                        .requestMatchers("/categories/**").permitAll()
                         .requestMatchers("/user/**").hasRole("USER") // Restrict /user endpoints to USER role
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )

@@ -3,6 +3,8 @@ package com.store.velvetbloom.controller;
 import com.store.velvetbloom.dto.UserResponseDTO;
 import com.store.velvetbloom.model.User;
 import com.store.velvetbloom.service.AuthService;
+import com.store.velvetbloom.service.CustomerService;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +25,10 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+
+    @Autowired
+    private CustomerService customerService;
 
 //    @PostMapping("/login")
 //    public ResponseEntity<?> login(@RequestBody User user) {
@@ -69,6 +75,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
         User newUser = authService.signup(user);
+
+        if ("CUSTOMER".equalsIgnoreCase(newUser.getRole())) {
+            customerService.createCustomer(newUser.getId());
+        }
+        
         UserResponseDTO responseDTO = new UserResponseDTO(
             newUser.getId(),
             newUser.getFirstName(),
