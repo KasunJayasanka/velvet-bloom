@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Banner from "../../components/Banner/Banner";
 import Pagination from "../../components/pageProps/shopPage/Pagination";
-import ProductBanner from "../../components/pageProps/shopPage/ProductBanner";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 
 const Home = () => {

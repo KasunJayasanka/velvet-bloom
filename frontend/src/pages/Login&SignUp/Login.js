@@ -68,7 +68,7 @@ export class Login extends Component {
                   <CustomArrowFront />
                 </button>
               </div>          
-              <hr />
+              {/* <hr />
               <div className='altSignContainer'>
             <p className='altSign'>SIGN IN WITH</p>
           </div>
@@ -76,7 +76,7 @@ export class Login extends Component {
             <img className='social' src={google} alt="Google Button" />
             <img className='social' src={apple} alt="Apple Button" />
             <img className='social' src={fb} alt="Facebook Button" />
-          </div>
+          </div> */}
             </div>
           ) : (
             <div className='loginForm'>
@@ -96,15 +96,16 @@ export class Login extends Component {
                     </span>
                 </button>
               </div>
-              <br/><hr />
-              <div className='altSignContainer'>
+              <br/>
+              <hr />
+              {/* <div className='altSignContainer'>
             <p className='altSign'>SIGN IN WITH</p>
           </div>
           <div className='options'>
             <img className='social' src={google} alt="Google Button" />
             <img className='social' src={apple} alt="Apple Button" />
             <img className='social' src={fb} alt="Facebook Button" />
-          </div>
+          </div> */}
           <div className='forgotPassword'>
             <p>FORGOT PASSWORD?</p>
           </div>
