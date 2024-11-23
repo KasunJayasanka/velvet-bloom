@@ -19,6 +19,8 @@ import Login from "./pages/Login&SignUp/Login";
 import Profile from "./pages/Profile/Profile";
 import CustomerDetails from "./pages/Profile/CustomerDetails";
 import ChangePassword from "./pages/Profile/ChangePassword";
+import Checkout from "./pages/Checkout/Checkout";
+import OrderConfirmation from "./pages/Checkout/orderConfirmation";
 
 const Layout = () => {
   return (
@@ -45,6 +47,8 @@ const router = createBrowserRouter(
         {/* <Route path="/offer" element={<Offer />}></Route> */}
         <Route path="/product/:_id" element={<ProductDetails />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orderConfirmation" element={<OrderConfirmation />} />
       </Route>
       <Route path="/signin" element={<Login />}></Route>
       <Route path="/profile" element={<Profile />}></Route>
