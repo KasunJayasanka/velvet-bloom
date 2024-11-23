@@ -24,7 +24,6 @@ const Layout = () => {
   return (
     <div className="bg-softpurple">
       <Header />
-      
       <ScrollRestoration />
       <Outlet />
       <Footer />

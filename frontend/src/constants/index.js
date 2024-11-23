@@ -40,7 +40,7 @@ export const paginationItems = [
       "https://example.com/images/tshirt-front.jpg",
       "https://example.com/images/tshirt-back.jpg"
     ],
-    "categories": ["Clothing", "Men", "T-Shirts"],
+    "categories": ["Clothing", "Men's Clothing", "T-Shirts"],
     "variety": [
       {
         "size": "M",
@@ -123,7 +123,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount": 0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -167,7 +167,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount":0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -212,7 +212,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount": 0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -256,7 +256,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount": 0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -300,7 +300,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount": 0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -344,7 +344,7 @@ export const paginationItems = [
     "brand": "ChicStyle",
     "discount": 20,
     "unitPrice": 30,
-    "productCount": 120,
+    "productCount": 0,
     "lowStockCount": 15,
     "mainImgUrl": "https://storage.googleapis.com/velvet-bloom-store/images/4ac83bfe-976f-49a1-a5fa-af31bb584a96_shutterstock_125358260-682x1024.jpg",
     "imageGallery": [
@@ -479,7 +479,7 @@ export const paginationItems = [
       "brand": "ChicStyle",
       "discount": 20,
       "unitPrice": 30,
-      "productCount": 120,
+      "productCount": 0,
       "lowStockCount": 15,
       "mainImgUrl": "https://example.com/images/dress-main.jpg",
       "imageGallery": [
