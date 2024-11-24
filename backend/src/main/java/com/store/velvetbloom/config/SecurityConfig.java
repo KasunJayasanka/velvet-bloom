@@ -70,7 +70,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationFilter authenticationFilter) throws Exception {
-        http
+        http    
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/upload", "/test-mongo-connection").permitAll() // Always allow these
