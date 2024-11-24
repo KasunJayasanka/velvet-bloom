@@ -1,22 +1,35 @@
 package com.store.velvetbloom.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.velvetbloom.model.Cart;
+import com.store.velvetbloom.model.Order;
 import com.store.velvetbloom.service.CartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class CartControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Mock
     private CartService cartService;
@@ -24,110 +37,145 @@ public class CartControllerTest {
     @InjectMocks
     private CartController cartController;
 
+    private ObjectMapper objectMapper;
+    private Cart testCart;
+    private Order testOrder;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(cartController).build();
+        objectMapper = new ObjectMapper();
+
+        // Initialize test cart
+        testCart = new Cart();
+        testCart.setId("cart123");
+        testCart.setCustomerID("customer123");
+        testCart.setProducts(new ArrayList<>());
+
+        // Initialize test cart item
+        Cart.CartItem cartItem = new Cart.CartItem();
+        cartItem.setProductID("product123");
+        cartItem.setProductName("Test Product");
+        cartItem.setSize("M");
+        cartItem.setPrice(29.99);
+        cartItem.setMainImage("image-url");
+        cartItem.setColors(Arrays.asList(new Cart.CartItem.Color("Red", 2)));
+
+        testCart.getProducts().add(cartItem);
+
+        // Initialize test order
+        testOrder = new Order();
+        testOrder.setContactName("John Doe");
+        testOrder.setContactMail("john@example.com");
+        testOrder.setContactNumber("1234567890");
+        Order.ShippingAddress address = new Order.ShippingAddress();
+        address.setAddressOne("123 Test St");
+        address.setCity("Test City");
+        address.setCountry("Test Country");
+        testOrder.setShippingAddress(address);
     }
 
     @Test
-    void testCreateCart() {
-        String customerID = "customer123";
-        Cart mockCart = new Cart();
-        mockCart.setCustomerID(customerID);
+    @WithMockUser(roles = "CUSTOMER")
+    void createCart_Success() throws Exception {
+        when(cartService.createCart(anyString())).thenReturn(testCart);
 
-        when(cartService.createCart(customerID)).thenReturn(mockCart);
+        mockMvc.perform(post("/carts/{customerID}", "customer123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("cart123"))
+                .andExpect(jsonPath("$.customerID").value("customer123"));
 
-        ResponseEntity<Cart> response = cartController.createCart(customerID);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(customerID, response.getBody().getCustomerID());
-        verify(cartService, times(1)).createCart(customerID);
+        verify(cartService).createCart("customer123");
     }
 
     @Test
-    void testAddProductToCart() {
-        String customerID = "customer123";
-        String productID = "product456";
-        String size = "M";
-        String color = "Red";
-        int count = 2;
+    @WithMockUser(roles = "CUSTOMER")
+    void addProductToCart_Success() throws Exception {
+        when(cartService.addProductToCart(anyString(), anyString(), anyString(), anyString(), anyInt()))
+                .thenReturn(testCart);
 
-        Cart mockCart = new Cart();
-        when(cartService.addProductToCart(customerID, productID, size, color, count)).thenReturn(mockCart);
+        mockMvc.perform(post("/carts/{customerID}/products/{productID}", "customer123", "product123")
+                        .param("size", "M")
+                        .param("color", "Red")
+                        .param("count", "2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.products[0].productID").value("product123"))
+                .andExpect(jsonPath("$.products[0].size").value("M"));
 
-        ResponseEntity<Cart> response = cartController.addProductToCart(customerID, productID, size, color, count);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(mockCart, response.getBody());
-        verify(cartService, times(1)).addProductToCart(customerID, productID, size, color, count);
+        verify(cartService).addProductToCart("customer123", "product123", "M", "Red", 2);
     }
 
     @Test
-    void testRemoveProductFromCart() {
-        String customerID = "customer123";
-        String productID = "product456";
-        String size = "M";
-        String color = "Red";
+    @WithMockUser(roles = "CUSTOMER")
+    void removeProductFromCart_Success() throws Exception {
+        when(cartService.removeProductFromCart(anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(testCart);
 
-        Cart mockCart = new Cart();
-        when(cartService.removeProductFromCart(customerID, productID, size, color)).thenReturn(mockCart);
+        mockMvc.perform(delete("/carts/{customerID}/products/{productID}", "customer123", "product123")
+                        .param("size", "M")
+                        .param("color", "Red")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
-        ResponseEntity<Cart> response = cartController.removeProductFromCart(customerID, productID, size, color);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(mockCart, response.getBody());
-        verify(cartService, times(1)).removeProductFromCart(customerID, productID, size, color);
+        verify(cartService).removeProductFromCart("customer123", "product123", "M", "Red");
     }
 
     @Test
-    void testViewCart() {
-        String customerID = "customer123";
+    @WithMockUser(roles = "CUSTOMER")
+    void viewCart_Success() throws Exception {
+        when(cartService.viewCart(anyString())).thenReturn(testCart);
 
-        Cart mockCart = new Cart();
-        mockCart.setCustomerID(customerID);
+        mockMvc.perform(get("/carts/{customerID}", "customer123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerID").value("customer123"));
 
-        when(cartService.viewCart(customerID)).thenReturn(mockCart);
-
-        ResponseEntity<Cart> response = cartController.viewCart(customerID);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(mockCart, response.getBody());
-        verify(cartService, times(1)).viewCart(customerID);
+        verify(cartService).viewCart("customer123");
     }
 
     @Test
-    void testCheckoutCart() {
-        String customerID = "customer123";
+    @WithMockUser(roles = "CUSTOMER")
+    void checkoutCart_Success() throws Exception {
+        when(cartService.checkoutCart(anyString(), any(Order.class))).thenReturn(new Order());
 
-        doNothing().when(cartService).checkoutCart(customerID);
+        mockMvc.perform(post("/carts/{customerID}/checkout", "customer123")
+                        .content(objectMapper.writeValueAsString(testOrder))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
-        ResponseEntity<?> response = cartController.checkoutCart(customerID);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals("Checkout successful", response.getBody());
-        verify(cartService, times(1)).checkoutCart(customerID);
+        verify(cartService).checkoutCart(eq("customer123"), any(Order.class));
     }
 
     @Test
-    void testUpdateCartProduct() {
-        String cartId = "cart789";
-        String productId = "product456";
-
+    @WithMockUser(roles = "CUSTOMER")
+    void updateCartProduct_Success() throws Exception {
         Cart.CartItem updatedItem = new Cart.CartItem();
-        updatedItem.setProductID(productId);
-        updatedItem.setProductName("Product Name");
+        updatedItem.setProductID("product123");
+        updatedItem.setSize("L");
+        updatedItem.setColors(Arrays.asList(new Cart.CartItem.Color("Blue", 3)));
 
-        Cart mockCart = new Cart();
-        mockCart.setId(cartId);
+        when(cartService.getCartById(anyString())).thenReturn(testCart);
+        doNothing().when(cartService).updateCartProduct(any(Cart.class), anyString(), any(Cart.CartItem.class));
 
-        when(cartService.getCartById(cartId)).thenReturn(mockCart);
-        doNothing().when(cartService).updateCartProduct(mockCart, productId, updatedItem);
+        mockMvc.perform(patch("/carts/{cartId}/products/{productId}", "cart123", "product123")
+                        .content(objectMapper.writeValueAsString(updatedItem))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cartId").value("cart123"))
+                .andExpect(jsonPath("$.productId").value("product123"));
 
-        ResponseEntity<?> response = cartController.updateCartProduct(cartId, productId, updatedItem);
+        verify(cartService).getCartById("cart123");
+        verify(cartService).updateCartProduct(any(Cart.class), eq("product123"), any(Cart.CartItem.class));
+    }
 
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals("Product updated in cart", ((Map<?, ?>) response.getBody()).get("message"));
-        verify(cartService, times(1)).getCartById(cartId);
-        verify(cartService, times(1)).updateCartProduct(mockCart, productId, updatedItem);
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void accessAllowed_ForAdminUser() throws Exception {
+        when(cartService.viewCart(anyString())).thenReturn(testCart);
+
+        mockMvc.perform(get("/carts/{customerID}", "customer123"))
+                .andExpect(status().isOk());
     }
 }

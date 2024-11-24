@@ -33,36 +33,31 @@ public class CartServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    // Test: Add Product to Cart - Successful case
     @Test
     void testAddProductToCart_Success() {
-        // Mock inputs
         String customerID = "12345";
         String productID = "prod001";
         String size = "M";
         String color = "Red";
         int count = 2;
 
-        // Mock cart
         Cart mockCart = new Cart();
         mockCart.setCustomerID(customerID);
-        mockCart.setProducts(new ArrayList<>()); // Ensure products list is initialized
+        mockCart.setProducts(new ArrayList<>());
 
-        // Mock product
         Product mockProduct = new Product();
         mockProduct.setId(productID);
         mockProduct.setProductName("Test Product");
         mockProduct.setProductCount(10);
         mockProduct.setUnitPrice(100.0);
 
-        // Mock repository behavior
         when(cartRepository.findByCustomerID(customerID)).thenReturn(Optional.of(mockCart));
         when(productRepository.findById(productID)).thenReturn(Optional.of(mockProduct));
         when(cartRepository.save(any(Cart.class))).thenReturn(mockCart);
 
-        // Execute the method
         Cart result = cartService.addProductToCart(customerID, productID, size, color, count);
 
-        // Assertions
         assertNotNull(result);
         assertEquals(1, result.getProducts().size());
         assertEquals(productID, result.getProducts().get(0).getProductID());
@@ -70,100 +65,116 @@ public class CartServiceTest {
         assertEquals(color, result.getProducts().get(0).getColors().get(0).getColor());
         assertEquals(count, result.getProducts().get(0).getColors().get(0).getCount());
 
-        // Verify repository calls
-        verify(cartRepository, times(1)).findByCustomerID(customerID);
-        verify(productRepository, times(1)).findById(productID);
-        verify(cartRepository, times(1)).save(any(Cart.class));
+        verify(cartRepository).findByCustomerID(customerID);
+        verify(productRepository).findById(productID);
+        verify(cartRepository).save(any(Cart.class));
     }
 
+    // Test: Add Product to Cart - Cart not found
     @Test
     void testAddProductToCart_CartNotFound() {
-        // Mock inputs
         String customerID = "12345";
         String productID = "prod001";
         String size = "M";
         String color = "Red";
         int count = 2;
 
-        // Mock repository behavior
         when(cartRepository.findByCustomerID(customerID)).thenReturn(Optional.empty());
 
-        // Execute the method and assert exception
         Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> cartService.addProductToCart(customerID, productID, size, color, count));
 
         assertEquals("Cart not found for Customer ID: " + customerID, exception.getMessage());
-
-        // Verify repository calls
-        verify(cartRepository, times(1)).findByCustomerID(customerID);
+        verify(cartRepository).findByCustomerID(customerID);
         verify(productRepository, never()).findById(anyString());
         verify(cartRepository, never()).save(any(Cart.class));
     }
 
+    // Test: Add Product to Cart - Product not found
     @Test
     void testAddProductToCart_ProductNotFound() {
-        // Mock inputs
         String customerID = "12345";
         String productID = "prod001";
         String size = "M";
         String color = "Red";
         int count = 2;
 
-        // Mock cart
         Cart mockCart = new Cart();
         mockCart.setCustomerID(customerID);
-        mockCart.setProducts(new ArrayList<>()); // Ensure products list is initialized
+        mockCart.setProducts(new ArrayList<>());
 
-        // Mock repository behavior
         when(cartRepository.findByCustomerID(customerID)).thenReturn(Optional.of(mockCart));
         when(productRepository.findById(productID)).thenReturn(Optional.empty());
 
-        // Execute the method and assert exception
         Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> cartService.addProductToCart(customerID, productID, size, color, count));
 
         assertEquals("Product not found with ID: " + productID, exception.getMessage());
-
-        // Verify repository calls
-        verify(cartRepository, times(1)).findByCustomerID(customerID);
-        verify(productRepository, times(1)).findById(productID);
+        verify(cartRepository).findByCustomerID(customerID);
+        verify(productRepository).findById(productID);
         verify(cartRepository, never()).save(any(Cart.class));
     }
 
+    // Test: Add Product to Cart - Insufficient Stock
     @Test
     void testAddProductToCart_InsufficientStock() {
-        // Mock inputs
         String customerID = "12345";
         String productID = "prod001";
         String size = "M";
         String color = "Red";
         int count = 5;
 
-        // Mock cart
         Cart mockCart = new Cart();
         mockCart.setCustomerID(customerID);
-        mockCart.setProducts(new ArrayList<>()); // Ensure products list is initialized
+        mockCart.setProducts(new ArrayList<>());
 
-        // Mock product
         Product mockProduct = new Product();
         mockProduct.setId(productID);
         mockProduct.setProductName("Test Product");
-        mockProduct.setProductCount(2); // Insufficient stock
+        mockProduct.setProductCount(2);
         mockProduct.setUnitPrice(100.0);
 
-        // Mock repository behavior
         when(cartRepository.findByCustomerID(customerID)).thenReturn(Optional.of(mockCart));
         when(productRepository.findById(productID)).thenReturn(Optional.of(mockProduct));
 
-        // Execute the method and assert exception
         Exception exception = assertThrows(RuntimeException.class,
                 () -> cartService.addProductToCart(customerID, productID, size, color, count));
 
         assertEquals("Insufficient stock for product: Test Product", exception.getMessage());
-
-        // Verify repository calls
-        verify(cartRepository, times(1)).findByCustomerID(customerID);
-        verify(productRepository, times(1)).findById(productID);
+        verify(cartRepository).findByCustomerID(customerID);
+        verify(productRepository).findById(productID);
         verify(cartRepository, never()).save(any(Cart.class));
+    }
+
+    // Test: Remove Product from Cart
+    @Test
+    void testRemoveProductFromCart_Success() {
+        String customerID = "12345";
+        String productID = "prod001";
+        String size = "M";
+        String color = "Red";
+
+        Cart.CartItem.Color colorItem = new Cart.CartItem.Color(color, 2);
+        Cart.CartItem cartItem = new Cart.CartItem();
+        cartItem.setProductID(productID);
+        cartItem.setSize(size);
+        cartItem.setColors(new ArrayList<>());
+        cartItem.getColors().add(colorItem);
+
+        Cart mockCart = new Cart();
+        mockCart.setCustomerID(customerID);
+        mockCart.setProducts(new ArrayList<>());
+        mockCart.getProducts().add(cartItem);
+
+        when(cartRepository.findByCustomerID(customerID)).thenReturn(Optional.of(mockCart));
+        when(cartRepository.save(any(Cart.class))).thenReturn(mockCart);
+
+        Cart result = cartService.removeProductFromCart(customerID, productID, size, color);
+
+        assertNotNull(result);
+        assertTrue(result.getProducts().isEmpty());
+
+        verify(cartRepository).findByCustomerID(customerID);
+        verify(cartRepository).save(any(Cart.class));
     }
 }

@@ -5,11 +5,8 @@ import com.store.velvetbloom.controller.CartControllerTest;
 import com.store.velvetbloom.controller.CategoryControllerTest;
 import com.store.velvetbloom.controller.CustomerControllerTest;
 import com.store.velvetbloom.controller.ProductControllerTest;
-import com.store.velvetbloom.service.AuthServiceTest;
-import com.store.velvetbloom.service.CartServiceTest;
-import com.store.velvetbloom.service.CategoryServiceTest;
-import com.store.velvetbloom.service.CustomerServiceTest;
-import com.store.velvetbloom.service.ProductServiceTest;
+import com.store.velvetbloom.controller.OrderController;
+import com.store.velvetbloom.service.*;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -23,13 +20,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 		CategoryControllerTest.class,
 		CustomerControllerTest.class,
 		ProductControllerTest.class,
+		OrderController.class,
 
 		// Service Tests
 		AuthServiceTest.class,
 		CartServiceTest.class,
 		CategoryServiceTest.class,
 		CustomerServiceTest.class,
-		ProductServiceTest.class
+		ProductServiceTest.class,
+		OrderServiceTest.class,
 })
 @SpringBootTest
 public class VelvetbloomApplicationTests {
