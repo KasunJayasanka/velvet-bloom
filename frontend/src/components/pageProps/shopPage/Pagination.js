@@ -7,25 +7,28 @@ function Items({ currentItems }) {
     <>
       {currentItems &&
         currentItems.map((item) => (
-          <div key={item._id.$oid} className="w-full">
+          <div key={item.id} className="w-full">
             <Product
-              _id={item._id.$oid}
+              id={item.id}
               img={item.mainImgUrl}
               productName={item.productName}
               price={item.unitPrice}
               description={item.description}
               brand={item.brand}
               discount={item.discount}
-              Size={item.variety.map(v => v.size).join(', ')}
+              Size={item.variety.map((v) => v.size).join(", ")}
               color={item.variety
-                .flatMap(v => v.colors.map(c => c.color))
-                .join(', ')
-              }
+                .flatMap((v) => v.colors.map((c) => c.color))
+                .join(", ")}
               badge={`${item.discount}% OFF`}
               productCount={item.productCount}
               categories={item.categories}
               varieties={item.variety}
               reviews={item.reviews}
+              lowStockCount={item.lowStockCount}
+              imageGallery={item.imageGallery}
+              createdAt={item.createdAt}
+              updatedAt={item.updatedAt}
             />
           </div>
         ))}
@@ -39,7 +42,7 @@ const Pagination = ({ itemsPerPage, paginationItems }) => {
 
   // Memoize the items array
   const items = useMemo(() => paginationItems || [], [paginationItems]);
-  
+
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(items.length / itemsPerPage);
@@ -48,12 +51,12 @@ const Pagination = ({ itemsPerPage, paginationItems }) => {
     // Reset pagination when items change
     setItemOffset(0);
     setItemStart(1);
-  }, [items]); // Now items is memoized and won't cause unnecessary re-renders
+  }, [items]); // Memoized items won't cause unnecessary re-renders
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
-    setItemStart(newOffset);
+    setItemStart(newOffset + 1);
   };
 
   return (
@@ -75,7 +78,8 @@ const Pagination = ({ itemsPerPage, paginationItems }) => {
           activeClassName="bg-black text-white"
         />
         <p className="text-base font-normal text-lightText">
-          Products from {itemStart === 0 ? 1 : itemStart} to {endOffset} of {items.length}
+          Products from {itemStart} to{" "}
+          {Math.min(itemStart + itemsPerPage - 1, items.length)} of {items.length}
         </p>
       </div>
     </div>

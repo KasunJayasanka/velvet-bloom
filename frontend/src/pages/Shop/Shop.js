@@ -3,40 +3,52 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import Pagination from "../../components/pageProps/shopPage/Pagination";
 import ProductBanner from "../../components/pageProps/shopPage/ProductBanner";
 import ShopSideNav from "../../components/pageProps/shopPage/ShopSideNav";
-import { paginationItems } from "../../constants";
 
 const Shop = () => {
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
-  const [filteredItems, setFilteredItems] = useState(paginationItems);
+  const [paginationItems, setPaginationItems] = useState([]); // Data from API
+  const [filteredItems, setFilteredItems] = useState([]);
 
   const itemsPerPageFromBanner = (itemsPerPage) => {
     setItemsPerPage(itemsPerPage);
   };
 
-  // Combined filtering function with fixed price filter
+  // Fetch items from the API
+  const fetchPaginationItems = async () => {
+    try {
+        const response = await fetch("http://localhost:8080/products");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        setPaginationItems(data);
+    } catch (error) {
+        console.error("Failed to fetch pagination items:", error);
+    }
+};
+
+  
+
+  // Combined filtering function
   const filterProducts = (category, size, price) => {
     let filtered = [...paginationItems];
 
-    // Apply price filter first
-    filtered = filtered.filter(item => {
-      // Ensure we're working with numbers
+    // Apply price filter
+    filtered = filtered.filter((item) => {
       const itemPrice = Number(item.unitPrice);
       const minPrice = Number(price.min);
       const maxPrice = Number(price.max);
-      
-      // Add some logging to debug price filtering
-      console.log(`Item: ${item.productName}, Price: ${itemPrice}, Range: ${minPrice}-${maxPrice}`);
-      
       return itemPrice >= minPrice && itemPrice <= maxPrice;
     });
 
     // Apply category filter
     if (category) {
-      filtered = filtered.filter(item =>
-        item.categories && item.categories.some(cat =>
+      filtered = filtered.filter((item) =>
+        item.categories?.some((cat) =>
           cat.toLowerCase().includes(category.toLowerCase())
         )
       );
@@ -44,24 +56,24 @@ const Shop = () => {
 
     // Apply size filter
     if (size) {
-      filtered = filtered.filter(item =>
-        item.variety && item.variety.some(v =>
-          v.size.toUpperCase() === size.toUpperCase()
-        )
+      filtered = filtered.filter((item) =>
+        item.variety?.some((v) => v.size.toUpperCase() === size.toUpperCase())
       );
     }
 
-    // Log the number of items after each filter
-    console.log(`Items after filtering - Price: ${filtered.length}`);
     return filtered;
   };
 
-  // Update filters when any filter changes
+  // Update filters when filters change
   useEffect(() => {
-    console.log("Price range changed:", priceRange); // Debug log
     const filtered = filterProducts(selectedCategory, selectedSize, priceRange);
     setFilteredItems(filtered);
-  }, [selectedCategory, selectedSize, priceRange]);
+  }, [selectedCategory, selectedSize, priceRange, paginationItems]);
+
+  // Fetch items when component mounts
+  useEffect(() => {
+    fetchPaginationItems();
+  }, []);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -72,13 +84,7 @@ const Shop = () => {
   };
 
   const handlePriceRangeSelect = (range) => {
-    // Ensure we're working with numbers
-    const newRange = {
-      min: Number(range.min),
-      max: Number(range.max)
-    };
-    console.log("Setting new price range:", newRange); // Debug log
-    setPriceRange(newRange);
+    setPriceRange({ min: Number(range.min), max: Number(range.max) });
   };
 
   return (
@@ -86,7 +92,7 @@ const Shop = () => {
       <Breadcrumbs title="Products" />
       <div className="w-full h-full flex pb-20 gap-10">
         <div className="w-[20%] lgl:w-[25%] hidden mdl:inline-flex h-full">
-          <ShopSideNav 
+          <ShopSideNav
             onCategorySelect={handleCategorySelect}
             onSizeSelect={handleSizeSelect}
             onPriceRangeSelect={handlePriceRangeSelect}
@@ -99,9 +105,9 @@ const Shop = () => {
             selectedSize={selectedSize}
             priceRange={priceRange}
           />
-          <Pagination 
-            itemsPerPage={itemsPerPage} 
-            paginationItems={filteredItems} 
+          <Pagination
+            itemsPerPage={itemsPerPage}
+            paginationItems={filteredItems}
           />
         </div>
       </div>

@@ -86,7 +86,7 @@ const OrderConfirmation = () => {
 
         {/* Track Order Button */}
         <div className="mt-10 text-center">
-          <Link to="/track-order">
+          <Link to="/OrderTracking">
             <button className="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
               Track Your Order
             </button>
