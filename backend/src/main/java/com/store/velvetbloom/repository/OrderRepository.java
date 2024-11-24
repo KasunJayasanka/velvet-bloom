@@ -9,6 +9,7 @@ import com.store.velvetbloom.model.Order;
 
 @Repository
 public interface OrderRepository extends MongoRepository<Order, String> {
-    List<Order> findByCustomer_Id(String customerId); // Find orders by customer ID
+    List<Order> findByContactMail(String contactMail);
+
 }
 

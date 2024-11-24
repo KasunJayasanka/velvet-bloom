@@ -200,6 +200,36 @@ public class ProductService {
         }
     }
 
+    public void updateProductStock(Product product) {
+        Product existingProduct = productRepository.findById(product.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + product.getId()));
 
+        // Update stock count for each variety and color
+        if (product.getVariety() != null) {
+            for (Product.Variety newVariety : product.getVariety()) {
+                Product.Variety existingVariety = existingProduct.getVariety().stream()
+                        .filter(v -> v.getSize().equals(newVariety.getSize()))
+                        .findFirst()
+                        .orElseThrow(() -> new ResourceNotFoundException("Variety not found for size: " + newVariety.getSize()));
+
+                for (Product.Variety.Color newColor : newVariety.getColors()) {
+                    Product.Variety.Color existingColor = existingVariety.getColors().stream()
+                            .filter(c -> c.getColor().equals(newColor.getColor()))
+                            .findFirst()
+                            .orElseThrow(() -> new ResourceNotFoundException("Color not found: " + newColor.getColor()));
+
+                    // Adjust stock count
+                    int updatedCount = existingColor.getCount() - newColor.getCount();
+                    if (updatedCount < 0) {
+                        throw new IllegalArgumentException("Insufficient stock for color: " + newColor.getColor());
+                    }
+                    existingColor.setCount(updatedCount);
+                }
+            }
+        }
+
+        // Save the updated product back to the repository
+        productRepository.save(existingProduct);
+    }
 
 }

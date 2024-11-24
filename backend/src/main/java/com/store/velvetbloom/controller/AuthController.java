@@ -54,10 +54,10 @@ public class AuthController {
         String redirectUrl;
         if ("ADMIN".equals(userDetails.getRole())) {
             redirectUrl = "http://localhost:3001/"; // Admin frontend
-        } else if ("USER".equals(userDetails.getRole())) {
-            redirectUrl = "http://localhost:3000/home"; // User frontend
+        } else if ("CUSTOMER".equals(userDetails.getRole())) {
+            redirectUrl = "http://localhost:3000/"; // User frontend
         } else {
-            redirectUrl = "http://default.velvetbloom.com"; // Default frontend
+            redirectUrl = "http://localhost:3000/"; // Default frontend
         }
 
         // Return token and redirect URL as part of the JSON response

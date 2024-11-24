@@ -1,6 +1,7 @@
 package com.store.velvetbloom.controller;
 
 import com.store.velvetbloom.model.Cart;
+import com.store.velvetbloom.model.Order;
 import com.store.velvetbloom.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,11 +52,10 @@ public class CartController {
 
     @PostMapping("/{customerID}/checkout")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
-    public ResponseEntity<?> checkoutCart(@PathVariable String customerID) {
-        cartService.checkoutCart(customerID);
+    public ResponseEntity<?> checkoutCart(@PathVariable String customerID, @RequestBody Order orderDetails) {
+        cartService.checkoutCart(customerID, orderDetails);
         return ResponseEntity.ok("Checkout successful");
     }
-
     
     @PatchMapping("/{cartId}/products/{productId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")

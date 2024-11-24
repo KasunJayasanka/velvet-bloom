@@ -2,8 +2,10 @@ package com.store.velvetbloom.service;
 
 import com.store.velvetbloom.exception.ResourceNotFoundException;
 import com.store.velvetbloom.model.Cart;
+import com.store.velvetbloom.model.Order;
 import com.store.velvetbloom.model.Product;
 import com.store.velvetbloom.repository.CartRepository;
+import com.store.velvetbloom.repository.OrderRepository;
 import com.store.velvetbloom.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -21,6 +24,9 @@ public class CartService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+    
     // Create Cart for Customer
     public Cart createCart(String customerID) {
         Cart cart = new Cart();
@@ -129,13 +135,156 @@ public class CartService {
     }
 
 
-    // Checkout Cart
-    public void checkoutCart(String customerID) {
+    // Checkout Cart and transition to Order
+//    public Order checkoutCart(String customerID, Order orderDetails) {
+//        // Step 1: Retrieve the Cart
+//        Cart cart = cartRepository.findByCustomerID(customerID)
+//                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for Customer ID: " + customerID));
+//
+//        if (cart.getProducts() == null || cart.getProducts().isEmpty()) {
+//            throw new RuntimeException("Cart is empty, cannot proceed with checkout.");
+//        }
+//
+//        // Step 2: Transform Cart items into Order items
+//        List<Order.OrderItem> orderItems = new ArrayList<>();
+//        double totalAmount = 0.0;
+//
+//        for (Cart.CartItem cartItem : cart.getProducts()) {
+//            // Fetch product details
+//            Product product = productRepository.findById(cartItem.getProductID())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + cartItem.getProductID()));
+//
+//            // Verify stock availability
+//            // Verify stock availability
+//            int totalRequested = (cartItem.getColors() != null)
+//                    ? cartItem.getColors().stream().mapToInt(Cart.CartItem.Color::getCount).sum()
+//                    : 0;
+//            if (product.getProductCount() < totalRequested) {
+//                throw new RuntimeException("Insufficient stock for product: " + product.getProductName());
+//            }
+//
+//            // Deduct stock from Product collection
+//            product.setProductCount(product.getProductCount() - totalRequested);
+//            productRepository.save(product);
+//
+//            // Calculate total amount
+//            totalAmount += cartItem.getPrice() * totalRequested;
+//
+//            // Map CartItem to OrderItem
+//            Order.OrderItem orderItem = new Order.OrderItem();
+//            orderItem.setProductID(cartItem.getProductID());
+//            orderItem.setProductName(cartItem.getProductName());
+//            orderItem.setSize(cartItem.getSize());
+//            // Map Cart.CartItem.Color to Order.OrderItem.Color
+//            List<Order.OrderItem.Color> orderColors = (cartItem.getColors() != null)
+//                    ? cartItem.getColors().stream()
+//                    .map(cartColor -> {
+//                        Order.OrderItem.Color orderColor = new Order.OrderItem.Color();
+//                        orderColor.setColor(cartColor.getColor());
+//                        orderColor.setCount(cartColor.getCount());
+//                        return orderColor;
+//                    })
+//                    .collect(Collectors.toList())
+//                    : new ArrayList<>();
+//        }
+//
+//        // Step 3: Populate Order details
+//        Order order = new Order();
+//        order.setOrderDate(LocalDateTime.now().toString());
+//        order.setUpdatedAt(LocalDateTime.now().toString());
+//        order.setDeliverDate(orderDetails.getDeliverDate());
+//        order.setContactName(orderDetails.getContactName());
+//        order.setContactMail(orderDetails.getContactMail());
+//        order.setContactNumber(orderDetails.getContactNumber());
+//        order.setShippingAddress(orderDetails.getShippingAddress());
+//        order.setStatus("ordered");
+//        order.setPayMethod(orderDetails.getPayMethod());
+//        order.setTotalAmount(totalAmount);
+//        order.setOrderItems(orderItems);
+//
+//        // Step 4: Save Order
+//        Order savedOrder = orderRepository.save(order);
+//
+//        // Step 5: Clear the Cart
+//        clearCart(customerID);
+//
+//        return savedOrder;
+//    }
+
+    public Order checkoutCart(String customerID, Order orderDetails) {
+        // Step 1: Retrieve the Cart
         Cart cart = cartRepository.findByCustomerID(customerID)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for Customer ID: " + customerID));
 
-        // Logic to transition Cart to Order
-        // ...
+        if (cart.getProducts() == null || cart.getProducts().isEmpty()) {
+            throw new RuntimeException("Cart is empty, cannot proceed with checkout.");
+        }
+
+        // Step 2: Transform Cart items into Order items
+        List<Order.OrderItem> orderItems = new ArrayList<>();
+        double totalAmount = 0.0;
+
+        for (Cart.CartItem cartItem : cart.getProducts()) {
+            // Fetch product details
+            Product product = productRepository.findById(cartItem.getProductID())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + cartItem.getProductID()));
+
+            // Verify stock availability
+            int totalRequested = cartItem.getColors() != null
+                    ? cartItem.getColors().stream().mapToInt(Cart.CartItem.Color::getCount).sum()
+                    : 0;
+            if (product.getProductCount() < totalRequested) {
+                throw new RuntimeException("Insufficient stock for product: " + product.getProductName());
+            }
+
+            // Deduct stock from Product collection
+            product.setProductCount(product.getProductCount() - totalRequested);
+            productRepository.save(product);
+
+            // Calculate total amount
+            totalAmount += cartItem.getPrice() * totalRequested;
+
+            // Map CartItem to OrderItem
+            Order.OrderItem orderItem = new Order.OrderItem();
+            orderItem.setProductID(cartItem.getProductID());
+            orderItem.setProductName(cartItem.getProductName());
+            orderItem.setSize(cartItem.getSize());
+            // Map Cart.CartItem.Color to Order.OrderItem.Color
+            List<Order.OrderItem.Color> orderColors = cartItem.getColors() != null
+                    ? cartItem.getColors().stream()
+                    .map(cartColor -> {
+                        Order.OrderItem.Color orderColor = new Order.OrderItem.Color();
+                        orderColor.setColor(cartColor.getColor());
+                        orderColor.setCount(cartColor.getCount());
+                        return orderColor;
+                    })
+                    .collect(Collectors.toList())
+                    : new ArrayList<>();
+            orderItem.setColors(orderColors);
+            orderItems.add(orderItem);
+        }
+
+        // Step 3: Populate Order details
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now().toString());
+        order.setUpdatedAt(LocalDateTime.now().toString());
+        order.setDeliverDate(orderDetails.getDeliverDate());
+        order.setContactName(orderDetails.getContactName());
+        order.setContactMail(orderDetails.getContactMail());
+        order.setContactNumber(orderDetails.getContactNumber());
+        order.setShippingAddress(orderDetails.getShippingAddress());
+        order.setStatus("ordered");
+        order.setPayMethod(orderDetails.getPayMethod());
+        order.setTotalAmount(totalAmount);
+        order.setOrderItems(orderItems); // Assign the populated orderItems list to the order
+
+        // Step 4: Save Order
+        Order savedOrder = orderRepository.save(order);
+
+        // Step 5: Clear the Cart
+        clearCart(customerID);
+
+        return savedOrder;
     }
 
     public Cart getCartById(String cartId) {
@@ -176,6 +325,26 @@ public class CartService {
         cart.setUpdatedAt(LocalDateTime.now().toString());
 
         // Save the updated cart to the database
+        cartRepository.save(cart);
+    }
+
+    public Cart getCartByCustomerID(String customerID) {
+        return cartRepository.findByCustomerID(customerID)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for customer ID: " + customerID));
+    }
+
+    public void clearCart(String customerID) {
+        // Fetch the cart by customer ID
+        Cart cart = cartRepository.findByCustomerID(customerID)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for customer with ID: " + customerID));
+
+        // Clear the product list
+        cart.setProducts(null);
+
+        // Update the cart's updatedAt timestamp
+        cart.setUpdatedAt(LocalDateTime.now().toString());
+
+        // Save the updated cart back to the repository
         cartRepository.save(cart);
     }
 
