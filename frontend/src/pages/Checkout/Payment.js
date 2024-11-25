@@ -71,12 +71,7 @@ const PaymentForm = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 flex space-x-4">
-                <img src="visa-logo.png" alt="Visa" className="w-10 h-auto" />
-                <img src="mastercard-logo.png" alt="MasterCard" className="w-10 h-auto" />
-                <img src="discover-logo.png" alt="Discover" className="w-10 h-auto" />
-                <img src="amex-logo.png" alt="American Express" className="w-10 h-auto" />
-              </div>
+
             </div>
           )}
           <div>
