@@ -1,136 +1,164 @@
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #FAF5FF;
-    color: #333;
-  }
-  
-  .order-history {
-    padding: 20px 50px;
-  }
-  
-  .order-header h2 {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0;
-  }
-  
-  .order-header h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 5px 0 20px;
-  }
-  
-  .filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .filters p {
-    font-size: 1rem;
-    margin: 0;
-  }
-  
-  .filter-btn {
-    padding: 8px 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-  }
-  
-  .filter-btn.active {
-    background-color: #d9c1e3;
-    color: white;
-  }
-  
-  .filter-btn:hover {
-    background-color: #e4d2ec;
-  }
-  
-  .order-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .order-card {
-    display: flex;
-    justify-content: space-between;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 15px;
-    align-items: center;
-  }
-  
-  .order-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .order-id {
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .order-product h3 {
-    margin: 5px 0;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  .order-product p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .order-meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .color-indicator {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-  }
-  
-  .order-details {
-    flex: 1;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .order-price {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .order-price span {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .menu-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-  }
-  
-  .menu-btn:hover {
-    color: #333;
-  }
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #FAF5FF;
+  color: #333;
+}
+
+.title-header {
+  margin-bottom: 40px;
+}
+
+.title-header h1 {
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.title-header p {
+  margin: 10px 0;
+}
+
+.order-history {
+  padding: 20px 50px;
+}
+
+.order-header h2 {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.order-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 5px 0 20px;
+}
+
+.filtersOrder {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtersOrder p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Updated filter button styles */
+.filterOrder-btn {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  text-decoration: none;
+  color: #333;
+}
+
+.filterOrder-btn.active {
+  background-color: #d9c1e3;
+  color: white;
+}
+
+.filterOrder-btn:hover {
+  background-color: #e4d2ec;
+  color: #333;
+}
+
+.filterOrder-btn.active:hover {
+  background-color: #d9c1e3; /* Keep the same color to indicate it's active */
+  cursor: default; /* Disable pointer cursor for active button */
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  align-items: center;
+}
+
+.order-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.order-id {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.order-product h3 {
+  margin: 5px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.order-product p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+}
+
+.order-details {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.order-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-price span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.menuOrder-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.menuOrder-btn:hover {
+  color: #333;
+}
+
+.divider {
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+  width: 100%;
+}

@@ -1,7 +1,7 @@
 import React from "react";
-import "./MyOrdersOngoing.css";
+import './MyOrdersOngoing.css';
+import { Link } from "react-router-dom";
 
-// Order Data (can be moved to a separate file if needed)
 const orders = [
   {
     id: "#7801",
@@ -51,40 +51,22 @@ const OrderCard = ({ order }) => (
       </div>
       <p>ESTIMATED DELIVERY: {order.deliveryDate}</p>
       <p>Status: {order.status}</p>
-      <button className="track-order-button">Track My Order</button>
+      <Link to="/orderTracking" className="track-order-button">Track My Order</Link>  {/* Link to OrderTracking page */}
     </div>
   </div>
 );
 
-const MyOrdersOngoing = () => {
+
+const MyOrdersAll = () => {
   return (
-    <div className="order-tracking">
-      <div className="sidebar">
-      <div className="divider"></div>
-        <h3>My Orders</h3>
-        <div className="divider"></div>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Abel&family=Albert+Sans:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </div>
-      <div className="main-content">
-        <h2>My Orders</h2>
-        <div className="filters">
-          <p className="filter-text">Filters</p>
-          <button className="filter-button">View All</button>
-          <button className="filter-button active">Ongoing</button>
-          <button className="filter-button">Completed</button>
-          <button className="filter-button">Cancelled</button>
-        </div>
-        <div className="order-list">
+    <div className = "viewall">
+<div className="order-list">
           {orders.map((order) => (
             <OrderCard order={order} key={order.id} />
           ))}
         </div>
-      </div>
-    </div>
+        </div>
   );
 };
 
-export default MyOrdersOngoing;
+export default MyOrdersAll;
