@@ -1,61 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
-import { paginationItems } from "../../../constants";
 
-const items = paginationItems;
 function Items({ currentItems }) {
   return (
     <>
       {currentItems &&
         currentItems.map((item) => (
-          <div key={item._id.$oid} className="w-full">
+          <div key={item.id} className="w-full">
             <Product
-              // Basic Product Details
-              _id={item._id.$oid}
+              id={item.id}
               img={item.mainImgUrl}
               productName={item.productName}
               price={item.unitPrice}
-              
-              // Comprehensive Product Information
               description={item.description}
               brand={item.brand}
               discount={item.discount}
-              
-              // Size and Color Handling
-              Size={item.variety.map(v => v.size).join(', ')}
+              Size={item.variety.map((v) => v.size).join(", ")}
               color={item.variety
-                .flatMap(v => v.colors.map(c => c.color))
-                .join(', ')
-              }
-              
-              // Badge and Stock Information
+                .flatMap((v) => v.colors.map((c) => c.color))
+                .join(", ")}
               badge={`${item.discount}% OFF`}
               productCount={item.productCount}
-              lowStockCount={item.lowStockCount}
-              
-              // Image Gallery
-              imageGallery={item.imageGallery}
-              
-              // Categories
               categories={item.categories}
-              
-              // Detailed Variety Information
-              varieties={item.variety.map(variety => ({
-                size: variety.size,
-                colors: variety.colors.map(color => ({
-                  color: color.color,
-                  count: color.count
-                }))
-              }))}
-              
-              // Reviews
-              reviews={item.reviews.map(review => ({
-                customerName: review.fName,
-                description: review.description
-              }))}
-              
-              // Timestamps
+              varieties={item.variety}
+              reviews={item.reviews}
+              lowStockCount={item.lowStockCount}
+              imageGallery={item.imageGallery}
               createdAt={item.createdAt}
               updatedAt={item.updatedAt}
             />
@@ -65,29 +36,27 @@ function Items({ currentItems }) {
   );
 }
 
-
-const Pagination = ({ itemsPerPage }) => {
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
+const Pagination = ({ itemsPerPage, paginationItems }) => {
   const [itemOffset, setItemOffset] = useState(0);
   const [itemStart, setItemStart] = useState(1);
 
-  // Simulate fetching items from another resources.
-  // (This could be items from props; or items loaded in a local state
-  // from an API endpoint with useEffect and useState)
+  // Memoize the items array
+  const items = useMemo(() => paginationItems || [], [paginationItems]);
+
   const endOffset = itemOffset + itemsPerPage;
-  //   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
-  // Invoke when user click to request another page.
+  useEffect(() => {
+    // Reset pagination when items change
+    setItemOffset(0);
+    setItemStart(1);
+  }, [items]); // Memoized items won't cause unnecessary re-renders
+
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
-    // console.log(
-    //   `User requested page number ${event.selected}, which is offset ${newOffset},`
-    // );
-    setItemStart(newOffset);
+    setItemStart(newOffset + 1);
   };
 
   return (
@@ -108,10 +77,9 @@ const Pagination = ({ itemsPerPage }) => {
           containerClassName="flex text-base font-semibold font-titleFont py-10"
           activeClassName="bg-black text-white"
         />
-
         <p className="text-base font-normal text-lightText">
-          Products from {itemStart === 0 ? 1 : itemStart} to {endOffset} of{" "}
-          {items.length}
+          Products from {itemStart} to{" "}
+          {Math.min(itemStart + itemsPerPage - 1, items.length)} of {items.length}
         </p>
       </div>
     </div>

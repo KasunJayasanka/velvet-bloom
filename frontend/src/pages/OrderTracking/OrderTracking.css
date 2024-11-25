@@ -1,0 +1,36 @@
+.ongoing-order-card{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 40px;
+    gap: 20px;
+}
+
+.ongoing-order-header {
+    margin-bottom: 40px;
+}
+
+.ongoing-order-body{
+    margin-bottom: 40px;
+
+}
+
+.contact-button {
+    text-align: right;
+  }
+  
+  .contact-button button {
+    background-color: #a784df;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: inherit;
+  }
+  
+  .contact-button button:hover {
+    background-color: #936cd6;
+  }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
+import Header from "../../components/home/Header/Header"
+import Footer from "../../components/home/Footer/Footer"
+import FooterBottom from "../../components/home/Footer/FooterBottom"
 import { FaUser } from "react-icons/fa";
 import "./Profile.css";
 
@@ -23,7 +26,11 @@ const Profile = () => {
 
 
   return (
+    <div>
+      <Header></Header>
+    
     <div className="max-w-container mx-auto px-4">
+      
       {/* Breadcrumbs Component */}
       <Breadcrumbs title="Customer Details" prevLocation={prevLocation} />
 
@@ -127,6 +134,9 @@ const Profile = () => {
           </div>
         </div>
       </div>
+    </div>
+    <Footer></Footer>
+    <FooterBottom></FooterBottom>
     </div>
   );
 };

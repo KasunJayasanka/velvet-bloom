@@ -2,35 +2,25 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import NavTitle from "./NavTitle";
 
-const Size = () => {
+const Size = ({ onSizeSelect }) => {
   const [showSizes, setShowSizes] = useState(true);
-  const Sizes = [
-    {
-      _id: 9001,
-      title: "XS",
+  const [selectedSize, setSelectedSize] = useState(null);
 
-    },
-    {
-      _id: 9002,
-      title: "S",
- 
-    },
-    {
-      _id: 9003,
-      title: "M",
-
-    },
-    {
-      _id: 9004,
-      title: "L",
-
-    },
-    {
-      _id: 9005,
-      title: "XL",
-
-    },
+  const sizes = [
+    { _id: 1, title: "XS", label: "Extra Small" },
+    { _id: 2, title: "S", label: "Small" },
+    { _id: 3, title: "M", label: "Medium" },
+    { _id: 4, title: "L", label: "Large" },
+    { _id: 5, title: "XL", label: "Extra Large" },
+    { _id: 6, title: "2XL", label: "Double Extra Large" },
+    { _id: 7, title: "3XL", label: "Triple Extra Large" },
   ];
+
+  const handleSizeClick = (size) => {
+    const newSize = selectedSize === size ? null : size;
+    setSelectedSize(newSize);
+    onSizeSelect(newSize);
+  };
 
   return (
     <div>
@@ -46,16 +36,40 @@ const Size = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <ul className="flex flex-col gap-4  ">
-            {Sizes.map((item) => (
-              <li
-                key={item._id}
-                className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2"
-              >
-                {item.title}
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-col gap-4 mt-4">
+            <div 
+              className={`
+                py-2 px-3 cursor-pointer rounded
+                ${!selectedSize ? 'bg-blue-500 text-white' : 'hover:bg-gray-50'}
+                transition-all duration-200 border border-gray-200
+              `}
+              onClick={() => handleSizeClick(null)}
+            >
+              All Sizes
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              {sizes.map((size) => (
+                <div
+                  key={size._id}
+                  onClick={() => handleSizeClick(size.title)}
+                  className={`
+                    py-2 px-3 cursor-pointer rounded
+                    ${selectedSize === size.title 
+                      ? 'bg-blue-500 text-white' 
+                      : 'hover:bg-gray-50'
+                    }
+                    transition-all duration-200
+                    border border-gray-200
+                    text-center
+                  `}
+                  title={size.label}
+                >
+                  {size.title}
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
       )}
     </div>
