@@ -6,17 +6,19 @@
 
 .fullBody {
     margin: 10px 100px;
+    display: flex;
+    flex-direction: column;
 }
 
 .slideMenu {
-    margin: 10px 400px;
+    margin: 30px 400px 0px 400px;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
 .slideMenuItem {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     cursor: pointer;
     opacity: 0.8;
     transition: color 0.3s ease, opacity 0.3s ease;
@@ -24,12 +26,17 @@
 
 .slideMenuItem.active {
     color: #6A1B9A;
-    font-weight: bold;
     opacity: 1;
 }
 
 .loginForm {
-    margin: 0px 450px;
+    width: 40%;
+    margin: 0 auto;
+    display: block;
+}
+
+.formContainer{
+    margin: 0px;
 }
 
 .contact {
@@ -43,6 +50,8 @@ input {
     padding: 12px;
     border-radius: 1px;
     border: 1px solid #ccc;
+    width: 100%; /* Prevent input fields from collapsing */
+    box-sizing: border-box; /* Includes padding and border in width */
 }
 
 .name {
@@ -77,7 +86,7 @@ input {
     z-index: 1;
 }
 
-.signUpButton{
+.signUpButton {
     margin: 20px 0px;
 }
 
@@ -142,90 +151,169 @@ hr {
     line-height: 1;
 }
 
-.welcomeAll{
+.welcomeAll {
     margin: 30px 0px;
 }
 
-.forgotPassword{
+.forgotPassword {
     display: flex;
     justify-content: flex-end;
     font-size: 0.6rem;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .fullBody {
-        margin: 10px 20px;
-    }
-
-    .slideMenu {
-        margin: 0;
-        font-size: 1rem;
-        gap: 100px;
-        justify-content: center;
-    }
-
-    .loginForm {
-        margin: 0;
-        width: 100%;
-    }
-
-    .name, .address .name {
-        flex-direction: column;
-    }
-
-    .signUpButton, .signInButton {
-        width: 100%;
-    }
-
-    .altSign {
-        font-size: 0.8rem;
-    }
+.error {
+    color: red;
+    font-size: 12px;
+    margin: 0;
 }
 
-@media (max-width: 480px) {
-    .fullBody {
-        margin: 10px;
-    }
+.formErrors {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: red;
+}
 
+.imageContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.logoo {
+    width: 180px;
+    height: auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    * {
+        font-family: "Albert Sans", sans-serif;
+    }
+    
+    .fullBody {
+        margin: 10px 0px;
+        display: flex;
+        flex-direction: column;
+    }
     .slideMenu {
+        margin: 30px 0px;
+        display: flex;
         flex-direction: row;
-        align-items: center;
-        font-size: 0.6rem;
-        gap: 50px;
+        justify-content: space-evenly;
     }
 
     .loginForm {
-        width: 100%;
-        margin: 0;
-        padding: 0 10px;
+        width: 80%;
+        margin: 0 auto;
+        display: block;
     }
-
-    .name, .address .name, .contact {
+    
+    .slideMenuItem {
+        font-size: 1.4rem;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: color 0.3s ease, opacity 0.3s ease;
+    }
+            
+    .contact {
+        display: flex;
         flex-direction: column;
     }
-
-    .fName, .lName, .country, .city, .address input {
-        width: 94%;
-    }
-
+    
     input {
         font-size: 0.8rem;
-        padding: 10px;
+        margin: 2.9px 0;
+        padding: 12px;
+        border-radius: 1px;
+        border: 1px solid #ccc;
     }
-
-    h5 {
-        font-size: 0.9rem;
-        margin-top: 15px;
+    
+    .name {
+        display: flex;
+        gap: 5px;
     }
-
-    .signUpButton, .signInButton {
+    
+    .fName, .lName, .country, .city {
         width: 100%;
-        padding: 8px;
     }
-
-    img {
-        width: 50px;
-        height: 50px;
+    
+    .addressTitle {
+        font-weight: 500;
+        font-size: 0.8rem;
+        margin: 5px 0px;
+    }
+    
+    .signUpButton, .signInButton {
+        display: flex;
+        align-items: center;
+        width: 50%;
+        justify-content: space-around;
+        font-weight: 500;
+        background-color: #CAB3DA;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        color: #000;
+        overflow: hidden;
+        transition: color 0.3s ease;
+        z-index: 1;
+    }
+    
+    .signUpButton {
+        margin: 20px 0px;
+    }
+    
+    .signUpButton::after, .signInButton::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #6A1B9A;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        z-index: -1;
+    }
+    
+    .signUpButton:hover::after, .signInButton:hover::after {
+        transform: scaleX(1);
+    }
+    
+    .signUpButton:hover, .signInButton:hover {
+        color: #fff;
+    }
+    
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    
+    hr {
+        opacity: 1;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .welcome {
+        font-size: 3rem;
+        font-weight: 320;
+        line-height: 1;
+    }
+    
+    .welcomeAll {
+        margin: 0px 0px;
+    }
+    
+    .imageContainer {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .logoo {
+        width: 180px;
+        height: auto;
     }
 }
