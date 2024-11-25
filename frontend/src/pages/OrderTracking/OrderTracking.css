@@ -7,6 +7,10 @@
     gap: 20px;
 }
 
+.tracking-content{
+  padding: 20px 50px;
+}
+
 .ongoing-order-header {
     margin-bottom: 40px;
 }
