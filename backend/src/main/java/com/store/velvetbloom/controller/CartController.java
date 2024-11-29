@@ -53,8 +53,11 @@ public class CartController {
     @PostMapping("/{customerID}/checkout")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     public ResponseEntity<?> checkoutCart(@PathVariable String customerID, @RequestBody Order orderDetails) {
-        cartService.checkoutCart(customerID, orderDetails);
-        return ResponseEntity.ok("Checkout successful");
+        String paymentUrl = cartService.checkoutCart(customerID, orderDetails);
+        return ResponseEntity.ok(Map.of(
+                "message", "Checkout successful, redirect to payment gateway",
+                "paymentUrl", paymentUrl
+        ));
     }
     
     @PatchMapping("/{cartId}/products/{productId}")

@@ -82,6 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/customers/**").permitAll()
                         .requestMatchers("/carts/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
+                        .requestMatchers("/payhere/**").permitAll()
                         .requestMatchers("/user/**").hasRole("USER") // Restrict /user endpoints to USER role
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )

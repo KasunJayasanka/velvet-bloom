@@ -22,6 +22,12 @@ public class Order {
     private String payMethod; // e.g., "Credit Card", "Cash on Delivery"
     private List<OrderItem> orderItems;
 
+    // New fields for PayHere integration
+    private String paymentStatus; // e.g., "Pending", "Paid", "Failed"
+    private String paymentReference; // Transaction ID returned by PayHere
+    private String paymentGateway; // e.g., "PayHere"
+    private String paymentMethod;  // e.g., "Credit Card", "Bank Transfer"
+
     public static class ShippingAddress {
         private String FName;
         private String LName;
@@ -262,5 +268,37 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentReference() {
+        return paymentReference;
+    }
+
+    public void setPaymentReference(String paymentReference) {
+        this.paymentReference = paymentReference;
+    }
+
+    public String getPaymentGateway() {
+        return paymentGateway;
+    }
+
+    public void setPaymentGateway(String paymentGateway) {
+        this.paymentGateway = paymentGateway;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

@@ -26,6 +26,9 @@ public class CartService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private PaymentService paymentService;
     
     // Create Cart for Customer
     public Cart createCart(String customerID) {
@@ -211,7 +214,7 @@ public class CartService {
 //        return savedOrder;
 //    }
 
-    public Order checkoutCart(String customerID, Order orderDetails) {
+    public String checkoutCart(String customerID, Order orderDetails) {
         // Step 1: Retrieve the Cart
         Cart cart = cartRepository.findByCustomerID(customerID)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for Customer ID: " + customerID));
@@ -225,23 +228,17 @@ public class CartService {
         double totalAmount = 0.0;
 
         for (Cart.CartItem cartItem : cart.getProducts()) {
-            // Fetch product details
             Product product = productRepository.findById(cartItem.getProductID())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + cartItem.getProductID()));
 
-            // Verify stock availability
             int totalRequested = cartItem.getColors() != null
                     ? cartItem.getColors().stream().mapToInt(Cart.CartItem.Color::getCount).sum()
                     : 0;
+
             if (product.getProductCount() < totalRequested) {
                 throw new RuntimeException("Insufficient stock for product: " + product.getProductName());
             }
 
-            // Deduct stock from Product collection
-            product.setProductCount(product.getProductCount() - totalRequested);
-            productRepository.save(product);
-
-            // Calculate total amount
             totalAmount += cartItem.getPrice() * totalRequested;
 
             // Map CartItem to OrderItem
@@ -249,22 +246,14 @@ public class CartService {
             orderItem.setProductID(cartItem.getProductID());
             orderItem.setProductName(cartItem.getProductName());
             orderItem.setSize(cartItem.getSize());
-            // Map Cart.CartItem.Color to Order.OrderItem.Color
-            List<Order.OrderItem.Color> orderColors = cartItem.getColors() != null
-                    ? cartItem.getColors().stream()
-                    .map(cartColor -> {
-                        Order.OrderItem.Color orderColor = new Order.OrderItem.Color();
-                        orderColor.setColor(cartColor.getColor());
-                        orderColor.setCount(cartColor.getCount());
-                        return orderColor;
-                    })
-                    .collect(Collectors.toList())
-                    : new ArrayList<>();
-            orderItem.setColors(orderColors);
+            orderItem.setColors(cartItem.getColors().stream()
+                    .map(cartColor -> new Order.OrderItem.Color(cartColor.getColor(), cartColor.getCount()))
+                    .collect(Collectors.toList()));
+
             orderItems.add(orderItem);
         }
 
-        // Step 3: Populate Order details
+        // Step 3: Create a preliminary order record
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now().toString());
         order.setUpdatedAt(LocalDateTime.now().toString());
@@ -273,18 +262,15 @@ public class CartService {
         order.setContactMail(orderDetails.getContactMail());
         order.setContactNumber(orderDetails.getContactNumber());
         order.setShippingAddress(orderDetails.getShippingAddress());
-        order.setStatus("ordered");
+        order.setStatus("pending"); // Mark as pending
         order.setPayMethod(orderDetails.getPayMethod());
         order.setTotalAmount(totalAmount);
-        order.setOrderItems(orderItems); // Assign the populated orderItems list to the order
+        order.setOrderItems(orderItems);
 
-        // Step 4: Save Order
         Order savedOrder = orderRepository.save(order);
 
-        // Step 5: Clear the Cart
-        clearCart(customerID);
-
-        return savedOrder;
+        // Step 4: Initiate payment via PaymentService
+        return paymentService.initiatePayment(savedOrder); // Returns payment URL
     }
 
     public Cart getCartById(String cartId) {
