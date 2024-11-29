@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,11 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
+    }
+
+    @GetMapping("/with-product-count")
+    public List<Map<String, Object>> getCategoriesWithProductCount() {
+        return categoryService.getCategoriesWithProductCount();
     }
 
     @GetMapping("/{id}")
@@ -79,5 +85,15 @@ public class CategoryController {
     public ResponseEntity<?> removeProductFromCategory(@PathVariable String categoryId, @PathVariable String productId) {
         categoryService.removeProductFromCategory(categoryId, productId);
         return ResponseEntity.ok(Map.of("message", "Product removed from category", "categoryId", categoryId, "productId", productId));
+    }
+
+    
+    @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, String>> deleteCategory(@PathVariable String categoryId) {
+        categoryService.deleteCategoryById(categoryId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Category with ID " + categoryId + " has been deleted successfully.");
+        return ResponseEntity.ok(response);
     }
 }

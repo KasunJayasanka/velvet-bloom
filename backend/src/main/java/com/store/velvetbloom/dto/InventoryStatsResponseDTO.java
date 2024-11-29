@@ -1,13 +1,13 @@
 package com.store.velvetbloom.dto;
 
-public class InventoryStatsResponse {
+public class InventoryStatsResponseDTO {
     private int categories;
     private int totalProducts;
     private int inStock;
     private int lowStock;
     private int outOfStock;
 
-    public InventoryStatsResponse(int categories, int totalProducts, int inStock, int lowStock, int outOfStock) {
+    public InventoryStatsResponseDTO(int categories, int totalProducts, int inStock, int lowStock, int outOfStock) {
         this.categories = categories;
         this.totalProducts = totalProducts;
         this.inStock = inStock;

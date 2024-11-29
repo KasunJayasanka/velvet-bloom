@@ -1,13 +1,13 @@
 package com.store.velvetbloom.dto;
 
-public class RecentOrder {
+public class RecentOrderDTO {
     private String id;
     private String customer;
     private String date;
     private String status;
     private String total;
 
-    public RecentOrder(String id, String customer, String date, String status, String total) {
+    public RecentOrderDTO(String id, String customer, String date, String status, String total) {
         this.id = id;
         this.customer = customer;
         this.date = date;

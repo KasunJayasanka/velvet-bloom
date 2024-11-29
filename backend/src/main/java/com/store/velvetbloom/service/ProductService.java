@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.store.velvetbloom.dto.LowStockProductDTO;
 import com.store.velvetbloom.exception.ResourceNotFoundException;
 import com.store.velvetbloom.model.Category;
 import com.store.velvetbloom.util.MultipartInputStreamFileResourceUtil;
@@ -230,6 +231,13 @@ public class ProductService {
 
         // Save the updated product back to the repository
         productRepository.save(existingProduct);
+    }
+
+    public List<LowStockProductDTO> getLowStockProducts(int threshold) {
+        List<Product> lowStockProducts = productRepository.findByProductCountLessThan(threshold);
+        return lowStockProducts.stream()
+                .map(product -> new LowStockProductDTO(product.getId(), product.getProductName(), product.getProductCount()))
+                .collect(Collectors.toList());
     }
 
 }

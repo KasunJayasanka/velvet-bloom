@@ -13,6 +13,7 @@ public class Order {
     private double totalAmount;
     private String orderDate;
     private String updatedAt;
+    private String createdAt;
     private String deliverDate;
     private String contactName;
     private String contactMail;
@@ -204,6 +205,10 @@ public class Order {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getDeliverDate() {

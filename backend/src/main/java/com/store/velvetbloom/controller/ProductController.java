@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.store.velvetbloom.dto.LowStockProductDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -93,6 +94,13 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(Map.of("message", "Product deleted successfully", "productId", id));
+    }
+
+    @GetMapping("/low-stock")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<LowStockProductDTO> getLowStockProducts() {
+        int lowStockThreshold = 4; // Define your threshold for low stock
+        return productService.getLowStockProducts(lowStockThreshold);
     }
 
     

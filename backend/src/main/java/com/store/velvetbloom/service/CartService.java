@@ -262,7 +262,7 @@ public class CartService {
         order.setContactMail(orderDetails.getContactMail());
         order.setContactNumber(orderDetails.getContactNumber());
         order.setShippingAddress(orderDetails.getShippingAddress());
-        order.setStatus("pending"); // Mark as pending
+        order.setStatus("new"); // Mark as pending
         order.setPayMethod(orderDetails.getPayMethod());
         order.setTotalAmount(totalAmount);
         order.setOrderItems(orderItems);

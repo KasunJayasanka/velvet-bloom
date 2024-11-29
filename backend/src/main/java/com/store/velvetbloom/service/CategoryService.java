@@ -3,9 +3,7 @@ package com.store.velvetbloom.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.store.velvetbloom.exception.ResourceNotFoundException;
 import com.store.velvetbloom.model.Product;
@@ -39,6 +37,25 @@ public class CategoryService {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
+    public List<Map<String, Object>> getCategoriesWithProductCount() {
+        List<Category> categories = categoryRepository.findAll();
+
+        // Transform each category to include the product count
+        List<Map<String, Object>> categoryDetails = new ArrayList<>();
+        for (Category category : categories) {
+            Map<String, Object> categoryInfo = new HashMap<>();
+            categoryInfo.put("categoryID", category.getId());
+            categoryInfo.put("category_name", category.getName());
+            categoryInfo.put("description", category.getDescription());
+            categoryInfo.put("numberOfProducts",
+                    category.getProductIds() != null ? category.getProductIds().size() : 0); // Count products
+            categoryDetails.add(categoryInfo);
+        }
+
+        return categoryDetails;
+    }
+
 
     public Category getCategoryById(String id) {
         return categoryRepository.findById(id)
@@ -118,6 +135,15 @@ public class CategoryService {
             category.setUpdatedAt(LocalDateTime.now().toString());
             categoryRepository.save(category);
         }
+    }
+
+    public void deleteCategoryById(String categoryId) {
+        // Check if the category exists
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + categoryId));
+
+        // Delete the category
+        categoryRepository.delete(category);
     }
 
 }
