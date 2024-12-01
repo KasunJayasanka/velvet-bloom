@@ -1,72 +1,149 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './MyOrdersOngoing.css';
 import { Link } from "react-router-dom";
-
-const orders = [
-  {
-    id: "#7801",
-    image: "./Michelle Blazer - Oversized Plunge Neck Button Up Blazer in White.jpg",
-    name: "Cotton T Shirt",
-    description: "Full Sleeve Zipper",
-    size: "L",
-    color: "Black",
-    quantity: 1,
-    price: "$99",
-    orderDate: "Wed, 26th Oct 24",
-    deliveryDate: "10th Nov 2024",
-    status: "Shipped",
-  },
-  {
-    id: "#7802",
-    image: "image2-url",
-    name: "Cotton T Shirt",
-    description: "Basic Slim Fit T-Shirt",
-    size: "L",
-    color: "Black",
-    quantity: 1,
-    price: "$99",
-    orderDate: "Wed, 30th Oct 24",
-    deliveryDate: "15th Nov 2024",
-    status: "Ready To Ship",
-  },
-];
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const OrderCard = ({ order }) => (
-  <div key={order.id} className="order-card">
-    <div className="order-image">
-      <img src={order.image} alt={order.name} />
+  <div className="order-card">
+    <div className="order-header">
+      <p><strong>Order ID:</strong> {order.id}</p>
+      <p><strong>Total:</strong> ${order.totalAmount}</p>
+      <p><strong>Order Placed:</strong> {new Date(order.orderDate).toLocaleDateString()}</p>
+      <p><strong>Estimated Delivery:</strong> {new Date(order.deliverDate).toLocaleDateString()}</p>
     </div>
-    <div className="order-details">
-      <div className="order-header">
-        <p>ORDER ID: {order.id}</p>
-        <p>Order Placed: {order.orderDate}</p>
-      </div>
-      <h3>{order.name}</h3>
-      <p>{order.description}</p>
-      <div className="order-info">
-        <p>Size: {order.size}</p>
-        <p>Color: {order.color}</p>
-        <p>Quantity: {order.quantity}</p>
-        <p>Price: {order.price}</p>
-      </div>
-      <p>ESTIMATED DELIVERY: {order.deliveryDate}</p>
-      <p>Status: {order.status}</p>
-      <Link to="/orderTracking" className="track-order-button">Track My Order</Link>  {/* Link to OrderTracking page */}
+    <div className="order-items-grid">
+      {order.orderItems.map((item, index) => (
+        <div key={index} className="order-item">
+          <div className="item-image">
+            <img src={item.mainImgUrl || "default-image-url"} alt={item.productName || "Product"} />
+          </div>
+          <div className="item-info">
+            <h3>{item.productName}</h3>
+            <p>Size: {item.size}</p>
+            <div className="color-row">
+              <strong>Colors:</strong>
+              {item.colors.map((colorObj, colorIndex) => (
+                <span
+                  key={colorIndex}
+                  className="color-indicator"
+                  style={{
+                    backgroundColor: colorObj.color || "#ccc",
+                  }}
+                ></span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
+    <Link to={`/orderTracking/${order.id}`} className="track-order-button">Track My Order</Link>
   </div>
 );
 
+const MyOrdersOngoing = () => {
+  const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-const MyOrdersAll = () => {
+  const ordersPerPage = 3; // Set limit to `s` orders per page
+
+  // Retrieve user info from Redux store
+  const userInfo = useSelector((state) => state.velvetReducer.userInfo);
+  const email = userInfo?.email;
+  const token = userInfo?.token;
+
+  const API_URL = `http://localhost:8080/orders/customer/${email}`;
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(API_URL, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const allOrders = response.data;
+
+        // Filter ongoing orders based on their status
+        const ongoingOrders = allOrders.filter(
+          (order) =>
+            order.status === "shipped" ||
+            order.status === "Ready To Ship" ||
+            order.status === "new"
+        );
+
+        setOrders(ongoingOrders);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        setError("Failed to fetch orders. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return <p>Loading ongoing orders...</p>;
+  }
+
+  if (error) {
+    return <p className="error">{error}</p>;
+  }
+
+  // Pagination logic
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
   return (
-    <div className = "viewall">
-<div className="order-list">
-          {orders.map((order) => (
-            <OrderCard order={order} key={order.id} />
-          ))}
-        </div>
-        </div>
+    <div className="viewall">
+      <h1>Ongoing Orders</h1>
+      <div className="order-list">
+        {currentOrders.length > 0 ? (
+          currentOrders.map((order) => <OrderCard order={order} key={order.id} />)
+        ) : (
+          <p>No ongoing orders found.</p>
+        )}
+      </div>
+      {/* Pagination Controls */}
+      <div className="pagination">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className="pagination-btn"
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="pagination-btn"
+        >
+          Next
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default MyOrdersAll;
+export default MyOrdersOngoing;

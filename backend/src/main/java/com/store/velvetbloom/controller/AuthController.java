@@ -56,7 +56,7 @@ public class AuthController {
         String customerId = null;
 
         if ("ADMIN".equals(userDetails.getRole())) {
-            redirectUrl = "http://localhost:3001/"; // Admin frontend
+            redirectUrl = "http://localhost:3001/dashboard"; // Admin frontend
         } else if ("CUSTOMER".equals(userDetails.getRole())) {
             redirectUrl = "http://localhost:3000/"; // User frontend
 

@@ -258,6 +258,7 @@ public class CartService {
             orderItem.setColors(cartItem.getColors().stream()
                     .map(cartColor -> new Order.OrderItem.Color(cartColor.getColor(), cartColor.getCount()))
                     .collect(Collectors.toList()));
+            orderItem.setMainImgUrl(cartItem.getMainImage());
 
             orderItems.add(orderItem);
         }
@@ -275,7 +276,8 @@ public class CartService {
         order.setPayMethod(orderDetails.getPayMethod());
         order.setTotalAmount(totalAmount);
         order.setOrderItems(orderItems);
-
+        
+        System.out.println(customer.getUser().getEmail());
         Order savedOrder = orderRepository.save(order);
 
         // Step 5: Initiate payment via PaymentService

@@ -107,6 +107,16 @@ public class Order {
         private String size;
         private List<Color> colors;
 
+        public String getMainImgUrl() {
+            return mainImgUrl;
+        }
+
+        public void setMainImgUrl(String mainImgUrl) {
+            this.mainImgUrl = mainImgUrl;
+        }
+
+        private String mainImgUrl;
+
         public static class Color {
             private String color;
             private int count;

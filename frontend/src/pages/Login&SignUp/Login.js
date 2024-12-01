@@ -72,6 +72,8 @@ export class Login extends Component {
         response = await axios.post(`${BACKEND_URL}/auth/login`, { email, password });
         localStorage.setItem('token', response.data.token); // Save token
         localStorage.setItem('customerID', response.data.customerId);
+        localStorage.setItem('email', response.data.email);
+        
         this.props.setLoggedIn({
           email,
           token: response.data.token,

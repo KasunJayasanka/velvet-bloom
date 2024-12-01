@@ -52,7 +52,7 @@ public class PaymentService {
         String firstName = names.get("firstName");
         String lastName = names.get("lastName");
         
-        
+        System.out.println(order.getContactMail());
         Map<String, String> payload = new HashMap<>();
         payload.put("merchant_id", merchantId);
         payload.put("return_url", returnUrl);

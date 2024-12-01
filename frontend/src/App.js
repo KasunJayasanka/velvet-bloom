@@ -67,6 +67,7 @@ const router = createBrowserRouter(
           <Route path="cancelled" element={<div>Cancelled Orders</div>} /> */}
       </Route>
       <Route path="/orderTracking" element={<OrderTracking />} />
+      <Route path="/orderTracking/:orderId" element={<OrderTracking />} />
     </Route>
     
   )
