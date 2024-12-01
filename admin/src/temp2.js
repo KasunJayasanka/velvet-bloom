@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-//import { productList } from '../TemporaryData/productManagementData';
+import { productList } from '../TemporaryData/productManagementData';
  
 function transformProductData(productList) {
   return productList.map(product => ({
-    _id:product.id,
+    _id: product._id.$oid || product._id,
     productName: product.productName,
     AvailableCount: product.productCount,
     LowStockCount: product.lowStockCount,
@@ -20,7 +20,7 @@ function transformProductData(productList) {
     categories: product.categories
   }));
 }
- 
+
 function ProjectManagement() {
   const navigate = useNavigate();
   const [stats, setStats] = useState({
@@ -44,12 +44,7 @@ function ProjectManagement() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const token ='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzMzMDM3MzAwLCJleHAiOjE3MzMxMjM3MDB9.FeTUTXVmcp6hw4dhatr5x0JXvGTEt55z8phufnNLDS0';
-        const response =await axios.get(`http://localhost:8080/inventories/stats`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get('/api/dashboard-stats');
         setStats(response.data);
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
@@ -62,8 +57,12 @@ function ProjectManagement() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await axios.get('http://localhost:8080/products');        
-        const productList = response.data;
+        // const response = await axios.get('YOUR_API_ENDPOINT_HERE', {
+        //   headers: {
+        //     Authorization: `Bearer YOUR_TOKEN_HERE`
+        //   }
+        // });        
+        // const productList = response.data;
         const ArrangedProducts = transformProductData(productList);
         const paginatedProducts = ArrangedProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
         setProducts(ArrangedProducts); 
@@ -117,16 +116,10 @@ function ProjectManagement() {
   // Handle product deletion
   const handleDeleteProduct = async () => {
     try {
-      const token ='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzMzMDM3MzAwLCJleHAiOjE3MzMxMjM3MDB9.FeTUTXVmcp6hw4dhatr5x0JXvGTEt55z8phufnNLDS0';
-      await axios.delete(`http://localhost:8080/products/${productToDelete}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(`/api/products/${productToDelete}`);
       setProducts(products.filter((product) => product._id !== productToDelete));
       setFilteredProducts(filteredProducts.filter((product) => product._id !== productToDelete));
       handleCloseDeleteDialog();
-      alert('Product added successfully!');
     } catch (error) {
       console.error('Error deleting product:', error);
     }
