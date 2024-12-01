@@ -6,13 +6,20 @@ import { motion } from "framer-motion";
 import { logo } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../../redux/velvetSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.velvetReducer.products);
+  const isLoggedIn = useSelector((state) => state.velvetReducer.isLoggedIn); // Fetch the login status
   const [showUser, setShowUser] = useState(false);
   const [sidenav, setSidenav] = useState(false);
   const routerLocation = useLocation();
+
+  const handleLogout = () => {
+    dispatch(logout()); // Dispatch logout action to update Redux state
+  };
 
   return (
     <div className="w-full h-20 bg-white sticky top-0 z-50 border-b-[1px] border-b-gray-200">
@@ -69,26 +76,39 @@ const Header = () => {
                   transition={{ duration: 0.5 }}
                   className="absolute top-6 right-0 z-50 bg-primeColor w-44 text-[#767676] h-auto p-4 pb-6"
                 >
-                  <Link to="/signin">
-                    <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                      Login
-                    </li>
-                  </Link>
-                  <Link to="/signup">
-                    <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                      Sign Up
-                    </li>
-                  </Link>
-                  <Link to="/profile">
-                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Profile
-                  </li>
-                  </Link>
-                  <Link to="/MyOrders">
-                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    My Orders
-                  </li>
-                  </Link>
+                  {isLoggedIn ? (
+                    <>
+                      <Link to="/profile">
+                        <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                          Profile
+                        </li>
+                      </Link>
+                      <Link to="/MyOrders">
+                        <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                          My Orders
+                        </li>
+                      </Link>
+                      <li
+                        onClick={handleLogout}
+                        className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                      >
+                        Logout
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/signin">
+                        <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                          Login
+                        </li>
+                      </Link>
+                      <Link to="/signup">
+                        <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                          Sign Up
+                        </li>
+                      </Link>
+                    </>
+                  )}
                 </motion.ul>
               )}
             </div>

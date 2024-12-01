@@ -3,13 +3,23 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   userInfo: [],
   products: [], 
-  cart:[]
+  cart:[],
+  isLoggedIn: false,
 };
 
 export const velvetSlice = createSlice({
   name: "velvet",
   initialState,
   reducers: {
+    setLoggedIn: (state, action) => {
+      state.isLoggedIn = true;
+      state.userInfo = action.payload; // Store user info if needed
+    },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.userInfo = null;
+      state.cart = [];
+    },
     addToCart: (state, action) => {
       const item = state.products.find(
         (item) => item._id === action.payload._id
@@ -50,6 +60,8 @@ export const velvetSlice = createSlice({
 });
 
 export const {
+  setLoggedIn,
+  logout,
   addToCart,
   increaseQuantity,
   decreaseQuantity,  
