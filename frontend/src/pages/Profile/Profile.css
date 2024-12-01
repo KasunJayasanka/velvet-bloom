@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: "Albert Sans", sans-serif;
+}
+
+.fullBody {
+    margin: 10px 100px;
+}
+
+.loginForm {
+    margin: 0px 450px;
+}
+
+.contact {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    font-size: 0.8rem;
+    margin: 2.9px 0;
+    padding: 12px;
+    border-radius: 1px;
+    border: 1px solid #ccc;
+}
+
+.name {
+    display: flex;
+    gap: 5px;
+}
+
+.fName, .lName, .country, .city, .id {
+    width: 50%;
+}
+
+.addressTitle {
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin: 5px 0px;
+}
+
+.profileContainer {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 100px;
+  }
+  
+  .profileDetails {
+    width: 60%;
+  }
+  
+  .profileTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .iconStyle {
+    width: 100%;
+    height: 100%;
+    color: #000000; /* Adjust color if needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eaeaea; /* Matches the existing .avatar background */
+    border-radius: 50%; /* Applies the circular shape directly to the icon */
+    font-size: 250px; /* Adjust size as per your requirements */
+    margin-top: 50px;
+  }
+  
+  .paymentDetails {
+    margin-top: 20px;
+  }
+  
+  .addNewCardButton {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #6A1B9A;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Button styles */
+.Editbutton, .changepwdbtn, .changepp {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-weight: 500;
+    background-color: #CAB3DA;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    color: #000;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    z-index: 1;
+    height: 50px; 
+    font-size: 1rem;
+}
+
+.Editbutton{
+    margin: 20px 5px;
+    width: 50%;
+}
+
+.changepwdbtn, .changepp {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+.Editbutton::after, .changepwdbtn::after, .changepp::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #6A1B9A;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.Editbutton:hover::after, .changepwdbtn:hover::after, .changepp:hover::after  {
+    transform: scaleX(1);
+}
+
+.Editbutton:hover, .changepwdbtn:hover, .changepp:hover {
+    color: #fff;
+}
+a
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+  

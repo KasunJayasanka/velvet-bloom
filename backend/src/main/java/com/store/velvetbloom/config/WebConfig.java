@@ -13,9 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",
                         "http://localhost:3001",
-                        "https://3493-2402-4000-2180-e980-18d3-140a-3339-9377.ngrok-free.app" // Replace with your ngrok public URL
+                        "https://sandbox.payhere.lk",
+                        "http://localhost:8080"
                 )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow these methods
+                .allowedMethods("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS") // Allow these methods
                 .allowedHeaders("*") // Allow all headers
                 .allowCredentials(true); // Allow cookies/credentials if needed
     }

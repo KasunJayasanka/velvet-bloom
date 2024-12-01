@@ -2,9 +2,11 @@ package com.store.velvetbloom.service;
 
 import com.store.velvetbloom.exception.ResourceNotFoundException;
 import com.store.velvetbloom.model.Cart;
+import com.store.velvetbloom.model.Customer;
 import com.store.velvetbloom.model.Order;
 import com.store.velvetbloom.model.Product;
 import com.store.velvetbloom.repository.CartRepository;
+import com.store.velvetbloom.repository.CustomerRepository;
 import com.store.velvetbloom.repository.OrderRepository;
 import com.store.velvetbloom.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class CartService {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private CustomerRepository customerRepository;
     
     // Create Cart for Customer
     public Cart createCart(String customerID) {
@@ -223,7 +228,11 @@ public class CartService {
             throw new RuntimeException("Cart is empty, cannot proceed with checkout.");
         }
 
-        // Step 2: Transform Cart items into Order items
+        // Step 2: Retrieve Customer Details
+        Customer customer = customerRepository.findById(customerID)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with ID: " + customerID));
+
+        // Step 3: Transform Cart items into Order items
         List<Order.OrderItem> orderItems = new ArrayList<>();
         double totalAmount = 0.0;
 
@@ -253,14 +262,14 @@ public class CartService {
             orderItems.add(orderItem);
         }
 
-        // Step 3: Create a preliminary order record
+        // Step 4: Create a preliminary order record
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now().toString());
         order.setUpdatedAt(LocalDateTime.now().toString());
         order.setDeliverDate(orderDetails.getDeliverDate());
-        order.setContactName(orderDetails.getContactName());
-        order.setContactMail(orderDetails.getContactMail());
-        order.setContactNumber(orderDetails.getContactNumber());
+        order.setContactName(customer.getUser().getFirstName() + " " + customer.getUser().getLastName());
+        order.setContactMail(customer.getUser().getEmail());
+        order.setContactNumber(customer.getUser().getMobileNo());
         order.setShippingAddress(orderDetails.getShippingAddress());
         order.setStatus("new"); // Mark as pending
         order.setPayMethod(orderDetails.getPayMethod());
@@ -269,9 +278,10 @@ public class CartService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // Step 4: Initiate payment via PaymentService
+        // Step 5: Initiate payment via PaymentService
         return paymentService.initiatePayment(savedOrder); // Returns payment URL
     }
+
 
     public Cart getCartById(String cartId) {
         // Explicitly check the ID format

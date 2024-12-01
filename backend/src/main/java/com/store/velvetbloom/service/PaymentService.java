@@ -52,6 +52,7 @@ public class PaymentService {
         String firstName = names.get("firstName");
         String lastName = names.get("lastName");
         
+        
         Map<String, String> payload = new HashMap<>();
         payload.put("merchant_id", merchantId);
         payload.put("return_url", returnUrl);
@@ -79,10 +80,8 @@ public class PaymentService {
         );
         payload.put("hash", hash);
 
-        // Construct the payment URL
-        StringBuilder paymentUrl = new StringBuilder(payherePaymentUrl).append("?");
-        payload.forEach((key, value) -> paymentUrl.append(key).append("=").append(java.net.URLEncoder.encode(value, StandardCharsets.UTF_8)).append("&"));
-        return paymentUrl.substring(0, paymentUrl.length() - 1);
+        
+        return constructPaymentUrl(payload);
     }
 
     public void handleCallback(Map<String, String> callbackData) {
@@ -150,5 +149,21 @@ public class PaymentService {
                 .toString()
                 .toUpperCase();
     }
+
+    public String constructPaymentUrl(Map<String, String> payload) {
+        StringBuilder paymentUrl = new StringBuilder(payherePaymentUrl).append("?");
+        payload.forEach((key, value) -> {
+            try {
+                paymentUrl.append(key)
+                        .append("=")
+                        .append(java.net.URLEncoder.encode(value, StandardCharsets.UTF_8.toString()))
+                        .append("&");
+            } catch (Exception e) {
+                throw new RuntimeException("Error encoding URL parameter: " + key + "=" + value, e);
+            }
+        });
+        return paymentUrl.substring(0, paymentUrl.length() - 1);
+    }
+
 
 }
