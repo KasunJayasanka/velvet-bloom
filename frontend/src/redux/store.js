@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import velvetReducer from "./velvetSlice";
+import checkoutReducer from './checkoutSlice';
 
 const persistConfig = {
   key: "root",
@@ -28,6 +29,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
+    checkout: checkoutReducer,
 });
 
 export let persistor = persistStore(store);

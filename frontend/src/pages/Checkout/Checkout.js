@@ -1,23 +1,71 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import ShippingForm from "./Shipping";
 import InformationForm from "./Information";
 import PaymentForm from "./Payment";
+import axios from "axios";
 
 const Checkout = () => {
   const [activeTab, setActiveTab] = useState("information");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    shipping: {
+      firstName: "",
+      lastName: "",
+      country: "",
+      state: "",
+      address: "",
+      city: "",
+      postalCode: "",
+    },
+    paymentMethod: "card",
+    cardNumber: "",
+    cardName: "",
+    expiry: "",
+    cvv: "",
+  });
+
   const location = useLocation();
   const cartItems = location.state?.cartItems || [];
-  const shippingCost = 30; 
+  const shippingCost = 30; // Fixed shipping cost for now
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const total = subtotal + shippingCost; 
+  const total = subtotal + shippingCost;
 
+  const navigate = useNavigate();
+
+  const handleCheckout = async () => {
+    try {
+      const data = {
+        userData: formData,
+        cartItems: cartItems,
+        paymentMethod: formData.paymentMethod,
+      };
+  
+      console.log('Data being sent to backend:', data); // Log data here
+  
+      const response = await axios.post(
+        "http://localhost:8080/carts/673dfe5d2096f953e47ab8e3/checkout",
+        data
+      );
+  
+      if (response.status === 200) {
+        navigate("/order-confirmation");
+      } else {
+        console.error("Checkout failed:", response);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
+  
   return (
-    <div className="min-h-screen bg-purple-50  px-12">
+    <div className="min-h-screen bg-purple-50 px-12">
       <Breadcrumbs title="Checkout" prevLocation="Cart" />
       <main className="container mx-auto flex flex-col lg:flex-row gap-48">
         {/* Left Section */}
@@ -48,9 +96,20 @@ const Checkout = () => {
               PAYMENT
             </button>
           </div>
-          {activeTab === "information" && <InformationForm />}
-          {activeTab === "shipping" && <ShippingForm />}
-          {activeTab === "payment" && <PaymentForm />}
+
+          {activeTab === "information" && (
+            <InformationForm formData={formData} setFormData={setFormData} />
+          )}
+          {activeTab === "shipping" && (
+            <ShippingForm formData={formData} setFormData={setFormData} />
+          )}
+          {activeTab === "payment" && (
+            <PaymentForm
+              formData={formData}
+              setFormData={setFormData}
+              handleCheckout={handleCheckout}
+            />
+          )}
         </section>
 
         {/* Right Section: Your Order */}
@@ -71,7 +130,9 @@ const Checkout = () => {
                       <p className="text-gray-600 text-left">
                         Size: {item.size} | Color: {item.color || "Default"}
                       </p>
-                      <p className="text-gray-600 text-left">Qty: {item.quantity}</p>
+                      <p className="text-gray-600 text-left">
+                        Qty: {item.quantity}
+                      </p>
                     </div>
                     <p className="font-medium text-gray-700">${item.price}</p>
                   </div>
@@ -82,17 +143,17 @@ const Checkout = () => {
             </div>
             {cartItems.length > 0 && (
               <div className="border-t border-gray-300 mt-4 pt-4">
-                <div className="flex justify-between text-gray-700">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                <div className="flex justify-between mb-2">
+                  <p className="font-medium">Subtotal:</p>
+                  <p className="font-medium">${subtotal}</p>
                 </div>
-                <div className="flex justify-between text-gray-700">
-                  <span>Shipping</span>
-                  <span>${shippingCost.toFixed(2)}</span>
+                <div className="flex justify-between mb-2">
+                  <p className="font-medium">Shipping:</p>
+                  <p className="font-medium">${shippingCost}</p>
                 </div>
-                <div className="flex justify-between text-gray-900 font-bold mt-2">
-                  <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                <div className="flex justify-between mt-4 mb-6">
+                  <p className="font-semibold">Total:</p>
+                  <p className="font-semibold">${total}</p>
                 </div>
               </div>
             )}

@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0e6197ca.css",
+    "main.js": "/static/js/main.b6487b76.js",
+    "static/media/bannerImgTwo.webp": "/static/media/bannerImgTwo.5291a3c135f54a27f472.webp",
+    "static/media/Google Button.png": "/static/media/Google Button.5cc1c6fa3ccdc5f9bb91.png",
+    "static/media/Facebook Button.png": "/static/media/Facebook Button.8cbef5e46a6e2ee3f0ab.png",
+    "static/media/Apple Button.png": "/static/media/Apple Button.b93cfdc95992ba480f4c.png",
+    "static/media/bannerImgThree.webp": "/static/media/bannerImgThree.0b7c94f9a0a547c228e0.webp",
+    "static/media/bannerImgOne.webp": "/static/media/bannerImgOne.336b53297169c33f3e38.webp",
+    "static/media/logo.png": "/static/media/logo.9df7240624af7f03bb4a.png",
+    "static/media/emptyCart.png": "/static/media/emptyCart.230e4848b62fb3cab325.png",
+    "index.html": "/index.html",
+    "main.0e6197ca.css.map": "/static/css/main.0e6197ca.css.map",
+    "main.b6487b76.js.map": "/static/js/main.b6487b76.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0e6197ca.css",
+    "static/js/main.b6487b76.js"
+  ]
+}

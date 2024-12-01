@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const OrderConfirmation = () => {
   const location = useLocation();
   const [prevLocation, setPrevLocation] = useState("");
-  const cartItems = location.state?.cartItems || []; 
+  // const cartItems = location.state?.cartItems || []; 
 
   useEffect(() => {
     setPrevLocation(location.state?.data || "Checkout");
