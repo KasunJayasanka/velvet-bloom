@@ -1,6 +1,7 @@
 package com.store.velvetbloom.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,5 +85,9 @@ public class CustomerService {
     // List All Customers
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    public Optional<Customer> getCustomerByUserId(String userId) {
+        return customerRepository.findByUserId(userId);
     }
 }

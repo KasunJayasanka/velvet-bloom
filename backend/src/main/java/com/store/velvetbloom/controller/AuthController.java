@@ -1,6 +1,7 @@
 package com.store.velvetbloom.controller;
 
 import com.store.velvetbloom.dto.UserResponseDTO;
+import com.store.velvetbloom.model.Customer;
 import com.store.velvetbloom.model.User;
 import com.store.velvetbloom.service.AuthService;
 import com.store.velvetbloom.service.CustomerService;
@@ -44,7 +45,7 @@ public class AuthController {
         // Authenticate the user and generate a token
         String token = authService.login(user.getEmail(), user.getPassword());
 
-        // Fetch user details to determine the redirect URL
+        // Fetch user details to determine the redirect URL and customer ID
         Optional<User> loggedInUser = authService.getUserByEmail(user.getEmail());
         if (loggedInUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials."));
@@ -52,21 +53,33 @@ public class AuthController {
 
         User userDetails = loggedInUser.get();
         String redirectUrl;
+        String customerId = null;
+
         if ("ADMIN".equals(userDetails.getRole())) {
             redirectUrl = "http://localhost:3001/"; // Admin frontend
         } else if ("CUSTOMER".equals(userDetails.getRole())) {
             redirectUrl = "http://localhost:3000/"; // User frontend
+
+            // Fetch the customer ID for the logged-in user
+            Optional<Customer> customer = customerService.getCustomerByUserId(userDetails.getId());
+            if (customer.isPresent()) {
+                customerId = customer.get().getId();
+            }
         } else {
             redirectUrl = "http://localhost:3000/"; // Default frontend
         }
 
-        // Return token and redirect URL as part of the JSON response
-        Map<String, String> response = new HashMap<>();
+        // Return token, redirect URL, and customer ID (if applicable) as part of the JSON response
+        Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("redirectUrl", redirectUrl);
+        if (customerId != null) {
+            response.put("customerId", customerId);
+        }
 
         return ResponseEntity.ok(response);
     }
+
 
 
 

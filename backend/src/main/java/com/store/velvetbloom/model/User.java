@@ -1,5 +1,6 @@
 package com.store.velvetbloom.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,6 +12,8 @@ public class User {
     private String lastName;
     private String email;
     private String mobileNo;
+
+    
     private String password;
     private String role; // Default to CUSTOMER
     private String country;
