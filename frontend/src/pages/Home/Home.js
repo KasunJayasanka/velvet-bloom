@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Banner from "../../components/Banner/Banner";
-import Pagination from "../../components/pageProps/shopPage/Pagination";
-import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
+import Shop from "../Shop/Shop";
 
 const Home = () => {
   const [itemsPerPage, setItemsPerPage] = useState(12);
@@ -11,11 +10,10 @@ const Home = () => {
   return (
     <div className="w-full mx-auto">
       <Banner />
+   
       <div className="max-w-container mx-auto px-4">
-      <Breadcrumbs title="Products" />
-      </div>
-      <div className="max-w-container mx-auto px-4">
-      <Pagination itemsPerPage={itemsPerPage} />
+        <Shop/>
+      
       </div>
     </div>
   );
