@@ -6,6 +6,7 @@ import com.store.velvetbloom.repository.OrderRepository;
 import com.store.velvetbloom.service.OrderService;
 import com.store.velvetbloom.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +23,21 @@ public class PaymentController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Value("${payhere.merchant.id}")
+    private String merchantId;
+
+    @Value("${payhere.merchant.secret}")
+    private String merchantSecret;
+
+    @Value("${payhere.return.url}")
+    private String returnUrl;
+
+    @Value("${payhere.notify.url}")
+    private String notifyUrl;
+    
+    @Value("${payhere.cancel.url}")
+    private String cancelurl;
 
     /**
      * Handle the return URL after payment is completed.
@@ -99,23 +115,68 @@ public class PaymentController {
     }
 
     @PostMapping("/redirect")
-    public ResponseEntity<String> handlePayHereRedirect(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<Map<String, String>> handlePayHereRedirect(@RequestBody Map<String, Object> requestData) {
         try {
-            // Prepare the PayHere request
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            // Extract and validate fields with default values
+            String orderId = (String) requestData.getOrDefault("order_id", "DefaultOrderId");
+            String amount = String.valueOf(requestData.getOrDefault("amount", "0.00"));
+            String currency = (String) requestData.getOrDefault("currency", "LKR");
+            String merchantSecret = this.merchantSecret;
 
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(data, headers);
-            String payHereUrl = "https://sandbox.payhere.lk/pay/checkout";
+            System.out.println("Order ID: " + orderId);
+            System.out.println("Amount: " + amount);
+            System.out.println("Currency: " + currency);
+            System.out.println("Merchant Secret: " + merchantSecret);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(payHereUrl, request, String.class);
+            if (orderId == null || amount == null || currency == null || merchantSecret == null) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Missing required parameters"));
+            }
 
-            return ResponseEntity.ok(response.getBody());
+            // Extract additional fields with default values
+            String contactName = (String) requestData.getOrDefault("contact_name", "John Doe");
+            String email = (String) requestData.getOrDefault("email", "default@example.com");
+            String phone = (String) requestData.getOrDefault("phone", "0000000000");
+            String address = (String) requestData.getOrDefault("address", "Default Address");
+            String city = (String) requestData.getOrDefault("city", "Default City");
+            String country = (String) requestData.getOrDefault("country", "Default Country");
+
+            // Calculate hash
+            String hash = PaymentService.generatePayHereHash(
+                    merchantId,
+                    orderId,
+                    Double.parseDouble(amount),
+                    currency,
+                    merchantSecret
+            );
+
+            // Construct payload
+            Map<String, String> payload = new HashMap<>();
+            payload.put("merchant_id", merchantId);
+            payload.put("return_url", returnUrl);
+            payload.put("cancel_url", cancelurl);
+            payload.put("notify_url", notifyUrl);
+            payload.put("order_id", orderId);
+            payload.put("items", "Order Payment");
+            payload.put("currency", currency);
+            payload.put("amount", amount);
+            payload.put("first_name", contactName.split("\\s+")[0]);
+            payload.put("last_name", contactName.contains(" ") ? contactName.split("\\s+")[1] : "LastName");
+            payload.put("email", email);
+            payload.put("phone", phone);
+            payload.put("address", address);
+            payload.put("city", city);
+            payload.put("country", country);
+            payload.put("hash", hash);
+
+            // Generate redirect URL
+            String redirectUrl = paymentService.constructPaymentUrl(payload);
+
+            return ResponseEntity.ok(Map.of("redirectUrl", redirectUrl));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error forwarding request to PayHere");
+            return ResponseEntity.status(500).body(Map.of("message", "Error constructing payment URL", "error", e.getMessage()));
         }
     }
+
 
 }
