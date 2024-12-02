@@ -152,7 +152,7 @@ function EditProduct() {
     if (!state.productName.trim()) {
       newErrors.productName = 'Product name cannot be empty.';
     } else if (!/^[a-zA-Z\s]{3,}$/.test(state.productName)) {
-      newErrors.productName = 'Product name must contain at least three letters.';
+      newErrors.productName = 'Product name can only contain letters.need atleast 3';
     }
 
     // Brand validation
@@ -289,6 +289,7 @@ function EditProduct() {
               Product Name
             </Typography>
             <TextField
+              name="productName"
               fullWidth
               value={state.productName}
               onChange={(e) =>
@@ -377,6 +378,7 @@ function EditProduct() {
               Brand
             </Typography>
             <TextField
+              name="brand"
               fullWidth
               value={state.brand}
               onChange={(e) =>
@@ -557,6 +559,7 @@ function EditProduct() {
                       Color
                     </Typography>
                     <TextField
+                      name="colour"
                       fullWidth
                       label="Color"
                       value={color.color}
@@ -610,6 +613,7 @@ function EditProduct() {
           variant="contained"
           sx={{ marginTop: 3, backgroundColor: '#9E4BDC' }}
           onClick={handleSubmit}
+          data-testid="SaveChangesButton"
         >
           Save Changes
         </Button>

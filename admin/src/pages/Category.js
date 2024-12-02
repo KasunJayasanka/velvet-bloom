@@ -168,7 +168,7 @@ function Category() {
             color="primary"
             onClick={handleAddCategory}
           >
-            Add Category
+            Add Category 
           </Button>
         </Grid>
       </Grid>

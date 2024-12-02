@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-
+ 
 const initialState = {
   productName: '',
   category: [],
@@ -111,9 +111,9 @@ function AddProduct() {
     if (!state.productName.trim()) {
       newErrors.productName = 'Product name cannot be empty.';
     } else if (!/^[a-zA-Z\s]{3,}$/.test(state.productName)) {
-      newErrors.productName = 'Product name must contain at least three letters.';
+      newErrors.productName = 'Product name can only contain letters.need atleast 3';
     }
-
+ 
     // Brand validation
     if (!state.brand.trim()) {
       newErrors.brand = 'Brand name cannot be empty.';
@@ -170,7 +170,7 @@ function AddProduct() {
       state.galleryImages.forEach((image, index) => {
         formData.append('galleryImages', image);
       });      
-      const token ="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzMzMDEwMzMyLCJleHAiOjE3MzMwOTY3MzJ9.L0a72YWxp7_Lwu37rvqgalNTag3mIA86MXRySYBQJWc";
+      const token ="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzMzMTExNjAwLCJleHAiOjE3MzMxOTgwMDB9.Z2ik2wjZsMumJ_ZdPXk7QMctOf_eLEWokYsAut3-5Ao";
       await axios.post('http://localhost:8080/products', formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
@@ -178,6 +178,12 @@ function AddProduct() {
         },
       });
       alert('Product added successfully!');
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
+      setSnackbar({
+        open: true,
+        message:'Product added successfully!',
+         severity:'success',
+      });
     } catch (error) {
       console.error('Failed to submit product:', error);
       setSnackbar({
@@ -240,6 +246,7 @@ function AddProduct() {
               Product Name
             </Typography>
             <TextField
+              name="productName"
               fullWidth
               value={state.productName}
               onChange={(e) =>
@@ -290,11 +297,12 @@ function AddProduct() {
               Low Stock Count
             </Typography>
             <TextField
+              name="low-count"
               fullWidth
               type="number"
               value={state.lowStockCount}
               onChange={(e) =>
-                dispatch({ type: 'SET_FIELD', field: 'lowStockCount', value: Math.max(0, Number(e.target.value)) })
+                dispatch({ type: 'SET_FIELD', field: 'lowStockCount', value: Math.max(0, Number(e.target.value)) } )
               }
               sx={{ marginTop: 1 }}
             />
@@ -302,6 +310,7 @@ function AddProduct() {
               Product Count
             </Typography>
             <TextField
+              name="productCount"
               fullWidth
               type="number"
               value={state.productCount}
@@ -315,6 +324,7 @@ function AddProduct() {
               Unit Price
             </Typography>
             <TextField
+              name ="unitPrice"
               fullWidth
               type="number"
               value={state.unitPrice}
@@ -328,6 +338,7 @@ function AddProduct() {
               Brand
             </Typography>
             <TextField
+              name="brand"
               fullWidth
               value={state.brand}
               onChange={(e) =>
@@ -341,6 +352,7 @@ function AddProduct() {
               Description
             </Typography>
             <TextField
+              name="description"
               fullWidth
               multiline
               rows={4}
@@ -369,6 +381,7 @@ function AddProduct() {
           <Col md={6} sm={12}>
             <Typography variant="h7" sx={{ color: 'Black', fontWeight: 'bold', marginTop: 2 }}>Discount</Typography>
             <TextField
+              name="discount"
               fullWidth
               type="number"
               value={state.discount}
@@ -377,6 +390,7 @@ function AddProduct() {
             />
             <Typography variant="h7" sx={{ color: 'Black', fontWeight: 'bold' }}>Product Main Image</Typography>
             <TextField
+              name="file"
               fullWidth
               type="file"
               inputProps={{ accept: 'image/*' }}
@@ -460,11 +474,12 @@ function AddProduct() {
               Add Variation
             </Button>
             {state.variations.map((variation, index) => (
-              <div key={index}>
+              <div key={index} data-testid="variations-section">
                 <Typography variant="h7" sx={{ color: 'Black', fontWeight: 'bold', marginTop: 2 }}>
                   Size
                 </Typography>
                 <TextField
+                  data-testid="size-select"
                   fullWidth
                   select
                   value={variation.size}
@@ -488,6 +503,7 @@ function AddProduct() {
                       Color
                     </Typography>
                     <TextField
+                      data-testid="color-input"
                       fullWidth
                       label="Color"
                       value={color.color}
@@ -508,6 +524,7 @@ function AddProduct() {
                       Count
                     </Typography>
                     <TextField
+                      data-testid="count-input"
                       fullWidth
                       type="number"
                       value={color.count}
@@ -541,6 +558,7 @@ function AddProduct() {
           variant="contained"
           sx={{ marginTop: 3, backgroundColor: '#9E4BDC' }}
           onClick={handleSubmit}
+          data-testid="add"
         >
           Add Product
         </Button>

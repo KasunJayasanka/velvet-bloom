@@ -29,7 +29,7 @@ function ProjectManagement() {
     inStock: 30,
     lowStock: 15,
     outOfStock: 5,
-  });
+  }); 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(0);

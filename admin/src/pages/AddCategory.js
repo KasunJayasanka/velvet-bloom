@@ -130,6 +130,7 @@ function AddCategory() {
           Add Category
         </Typography>
         <TextField
+          name="categoryName"
           label="Category Name"
           variant="outlined"
           fullWidth
@@ -140,6 +141,7 @@ function AddCategory() {
           helperText={errors.categoryName || ''}
         />
         <TextField
+          name="descriptionn"
           label="Description"
           variant="outlined"
           fullWidth
@@ -158,6 +160,7 @@ function AddCategory() {
           Category Main Image
         </Typography>
         <input
+          name="file"
           type="file"
           accept="image/*"
           onChange={handleImageChange}
@@ -171,10 +174,10 @@ function AddCategory() {
       </Box>
 
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-        <Button variant="contained" color="primary" onClick={handleAddCategory}>
+        <Button variant="contained" color="primary" onClick={handleAddCategory} data-testid="add">
           Add
         </Button>
-        <Button variant="outlined" color="secondary" onClick={handleBack}>
+        <Button variant="outlined" color="secondary" onClick={handleBack} data-testid="back">
           Back
         </Button>
       </Box>
