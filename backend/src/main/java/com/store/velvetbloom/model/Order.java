@@ -99,6 +99,8 @@ public class Order {
         public void setAddressTwo(String addressTwo) {
             this.addressTwo = addressTwo;
         }
+
+        
     }
 
     public static class OrderItem {

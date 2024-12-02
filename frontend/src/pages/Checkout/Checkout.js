@@ -3,21 +3,18 @@ import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import ShippingForm from "./Shipping";
 import InformationForm from "./Information";
-import PaymentForm from "./Payment";
 
 const Checkout = () => {
   const [activeTab, setActiveTab] = useState("information");
   const location = useLocation();
   const cartItems = location.state?.cartItems || [];
-  const shippingCost = 30; 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const total = subtotal + shippingCost; 
+  const orderId = location.state?.orderId; // Pass orderId from previous page
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const shippingCost = 30;
+  const total = subtotal + shippingCost;
 
   return (
-    <div className="min-h-screen bg-purple-50  px-12">
+    <div className="min-h-screen bg-purple-50 px-12">
       <Breadcrumbs title="Checkout" prevLocation="Cart" />
       <main className="container mx-auto flex flex-col lg:flex-row gap-48">
         {/* Left Section */}
@@ -39,18 +36,15 @@ const Checkout = () => {
             >
               SHIPPING
             </button>
-            <button
-              className={`font-semibold ${
-                activeTab === "payment" ? "text-black" : "text-gray-400"
-              }`}
-              onClick={() => setActiveTab("payment")}
-            >
-              PAYMENT
-            </button>
           </div>
           {activeTab === "information" && <InformationForm />}
-          {activeTab === "shipping" && <ShippingForm />}
-          {activeTab === "payment" && <PaymentForm />}
+          {activeTab === "shipping" && (
+            <ShippingForm
+              orderId={orderId}
+              cartItems={cartItems}
+              total={total}
+            />
+          )}
         </section>
 
         {/* Right Section: Your Order */}

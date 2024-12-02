@@ -73,10 +73,11 @@ export class Login extends Component {
         localStorage.setItem('token', response.data.token); // Save token
         localStorage.setItem('customerID', response.data.customerId);
         localStorage.setItem('email', response.data.email);
-        
+
         this.props.setLoggedIn({
           email,
           token: response.data.token,
+          customerId: response.data.customerId,
         }); // Update Redux state
         window.location.href = response.data.redirectUrl; // Redirect user
       }

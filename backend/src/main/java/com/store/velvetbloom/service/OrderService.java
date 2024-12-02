@@ -31,39 +31,96 @@ public class OrderService {
     @Autowired
     private ProductService productService;
 
+//    public Order createOrder(String customerID, Order orderDetails) {
+//        // Retrieve cart for the customer
+//        Cart cart = cartService.getCartByCustomerID(customerID);
+//        if (cart.getProducts().isEmpty()) {
+//            throw new RuntimeException("Cart is empty, cannot create an order.");
+//        }
+//
+//        // Calculate total amount and create order items
+//        double totalAmount = 0.0;
+//        List<Order.OrderItem> orderItems = new ArrayList<>();
+//        for (Cart.CartItem cartItem : cart.getProducts()) {
+//            Product product = productService.getProductById(cartItem.getProductID());
+//
+//            // Deduct stock
+//            product.setProductCount(product.getProductCount() - cartItem.getColors().stream()
+//                    .mapToInt(Cart.CartItem.Color::getCount).sum());
+//            productService.updateProductStock(product);
+//
+//            totalAmount += cartItem.getPrice() * cartItem.getColors().stream()
+//                    .mapToInt(Cart.CartItem.Color::getCount).sum();
+//
+//            // Map colors from CartItem to OrderItem
+//            List<Order.OrderItem.Color> orderColors = cartItem.getColors().stream()
+//                    .map(color -> new Order.OrderItem.Color(color.getColor(), color.getCount()))
+//                    .toList();
+//
+//            // Create OrderItem
+//            Order.OrderItem orderItem = new Order.OrderItem();
+//            orderItem.setProductID(cartItem.getProductID());
+//            orderItem.setProductName(cartItem.getProductName());
+//            orderItem.setSize(cartItem.getSize());
+//            orderItem.setColors(orderColors);
+//            orderItems.add(orderItem);
+//        }
+//
+//        // Populate Order
+//        Order order = new Order();
+//        order.setOrderDate(LocalDateTime.now().toString());
+//        order.setUpdatedAt(LocalDateTime.now().toString());
+//        order.setDeliverDate(orderDetails.getDeliverDate()); // Optional
+//        order.setContactName(orderDetails.getContactName());
+//        order.setContactMail(orderDetails.getContactMail());
+//        order.setContactNumber(orderDetails.getContactNumber());
+//        order.setShippingAddress(orderDetails.getShippingAddress());
+//        order.setStatus("ordered");
+//        order.setPayMethod(orderDetails.getPayMethod());
+//        order.setTotalAmount(totalAmount);
+//        order.setOrderItems(orderItems);
+//
+//        // Save Order and clear cart
+//        cartService.clearCart(customerID);
+//        return orderRepository.save(order);
+//    }
+
     public Order createOrder(String customerID, Order orderDetails) {
-        // Retrieve cart for the customer
-        Cart cart = cartService.getCartByCustomerID(customerID);
-        if (cart.getProducts().isEmpty()) {
-            throw new RuntimeException("Cart is empty, cannot create an order.");
+        // Validate order items
+        if (orderDetails.getOrderItems() == null || orderDetails.getOrderItems().isEmpty()) {
+            throw new RuntimeException("Order items cannot be empty.");
         }
 
-        // Calculate total amount and create order items
+        // Calculate total amount and validate stock for each order item
         double totalAmount = 0.0;
-        List<Order.OrderItem> orderItems = new ArrayList<>();
-        for (Cart.CartItem cartItem : cart.getProducts()) {
-            Product product = productService.getProductById(cartItem.getProductID());
+        List<Order.OrderItem> validatedOrderItems = new ArrayList<>();
+
+        for (Order.OrderItem orderItem : orderDetails.getOrderItems()) {
+            // Retrieve product details
+            Product product = productService.getProductById(orderItem.getProductID());
+            if (product == null) {
+                throw new RuntimeException("Product not found with ID: " + orderItem.getProductID());
+            }
+
+            // Calculate total quantity from colors
+            int totalQuantity = orderItem.getColors().stream()
+                    .mapToInt(Order.OrderItem.Color::getCount)
+                    .sum();
+
+            // Check stock availability
+            if (product.getProductCount() < totalQuantity) {
+                throw new RuntimeException("Insufficient stock for product: " + product.getProductName());
+            }
 
             // Deduct stock
-            product.setProductCount(product.getProductCount() - cartItem.getColors().stream()
-                    .mapToInt(Cart.CartItem.Color::getCount).sum());
+            product.setProductCount(product.getProductCount() - totalQuantity);
             productService.updateProductStock(product);
 
-            totalAmount += cartItem.getPrice() * cartItem.getColors().stream()
-                    .mapToInt(Cart.CartItem.Color::getCount).sum();
+            // Add to total amount
+            totalAmount += totalQuantity * product.getUnitPrice();
 
-            // Map colors from CartItem to OrderItem
-            List<Order.OrderItem.Color> orderColors = cartItem.getColors().stream()
-                    .map(color -> new Order.OrderItem.Color(color.getColor(), color.getCount()))
-                    .toList();
-
-            // Create OrderItem
-            Order.OrderItem orderItem = new Order.OrderItem();
-            orderItem.setProductID(cartItem.getProductID());
-            orderItem.setProductName(cartItem.getProductName());
-            orderItem.setSize(cartItem.getSize());
-            orderItem.setColors(orderColors);
-            orderItems.add(orderItem);
+            // Validate and add order item
+            validatedOrderItems.add(orderItem);
         }
 
         // Populate Order
@@ -75,13 +132,12 @@ public class OrderService {
         order.setContactMail(orderDetails.getContactMail());
         order.setContactNumber(orderDetails.getContactNumber());
         order.setShippingAddress(orderDetails.getShippingAddress());
-        order.setStatus("ordered");
+        order.setStatus("new");
         order.setPayMethod(orderDetails.getPayMethod());
         order.setTotalAmount(totalAmount);
-        order.setOrderItems(orderItems);
+        order.setOrderItems(validatedOrderItems);
 
-        // Save Order and clear cart
-        cartService.clearCart(customerID);
+        // Save and return the created order
         return orderRepository.save(order);
     }
 

@@ -45,6 +45,11 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
+    public Cart ensureCartExists(String customerID) {
+        return cartRepository.findByCustomerID(customerID)
+                .orElseGet(() -> createCart(customerID));
+    }
+
     // Add Product to Cart
     public Cart addProductToCart(String customerID, String productID, String size, String color, int count) {
         Cart cart = cartRepository.findByCustomerID(customerID)

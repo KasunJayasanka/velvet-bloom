@@ -17,6 +17,12 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    @GetMapping("/{customerID}")
+    public ResponseEntity<Cart> viewCart(@PathVariable String customerID) {
+        Cart cart = cartService.ensureCartExists(customerID); // Ensures a cart exists
+        return ResponseEntity.ok(cart);
+    }
+
     @PostMapping("/{customerID}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     public ResponseEntity<Cart> createCart(@PathVariable String customerID) {
@@ -31,9 +37,11 @@ public class CartController {
             @RequestParam String size,
             @RequestParam String color,
             @RequestParam int count) {
+        Cart cart = cartService.ensureCartExists(customerID); // Ensures a cart exists
         return ResponseEntity.ok(cartService.addProductToCart(customerID, productID, size, color, count));
     }
 
+    
     @DeleteMapping("/{customerID}/products/{productID}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
     public ResponseEntity<Cart> removeProductFromCart(
@@ -44,11 +52,11 @@ public class CartController {
         return ResponseEntity.ok(cartService.removeProductFromCart(customerID, productID, size, color));
     }
 
-    @GetMapping("/{customerID}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
-    public ResponseEntity<Cart> viewCart(@PathVariable String customerID) {
-        return ResponseEntity.ok(cartService.viewCart(customerID));
-    }
+//    @GetMapping("/{customerID}")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+//    public ResponseEntity<Cart> viewCart(@PathVariable String customerID) {
+//        return ResponseEntity.ok(cartService.viewCart(customerID));
+//    }
 
     @PostMapping("/{customerID}/checkout")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")

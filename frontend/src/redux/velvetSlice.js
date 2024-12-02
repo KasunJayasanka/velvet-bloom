@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
   userInfo: [],
@@ -6,6 +8,18 @@ const initialState = {
   cart:[],
   isLoggedIn: false,
 };
+
+export const createOrder = createAsyncThunk(
+  'velvet/createOrder',
+  async ({ customerID, orderDetails }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`/api/orders/${customerID}`, orderDetails);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const velvetSlice = createSlice({
   name: "velvet",
@@ -55,6 +69,19 @@ export const velvetSlice = createSlice({
     },
     resetCart: (state) => {
       state.products = [];
+    },
+    extraReducers: (builder) => {
+      builder
+        .addCase(createOrder.pending, (state) => {
+          state.orderStatus = 'loading';
+        })
+        .addCase(createOrder.fulfilled, (state) => {
+          state.orderStatus = 'succeeded';
+        })
+        .addCase(createOrder.rejected, (state, action) => {
+          state.orderStatus = 'failed';
+          state.orderError = action.payload;
+        });
     },
   },
 });

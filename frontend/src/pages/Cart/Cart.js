@@ -1,34 +1,109 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/velvetSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
+import axios from "axios";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.velvetReducer.products);
-  const [totalAmt, setTotalAmt] = useState("");
-  const [shippingCharge, setShippingCharge] = useState("");
+  const customerId = localStorage.getItem("customerID"); // Replace with correct state
+  // Replace with correct state
+  const navigate = useNavigate();
+
+  const [totalAmt, setTotalAmt] = useState(0);
+  const [shippingCharge, setShippingCharge] = useState(0);
+
   useEffect(() => {
     let price = 0;
-    products.map((item) => {
+    products.forEach((item) => {
       price += item.price * item.quantity;
-      return price;
     });
     setTotalAmt(price);
   }, [products]);
+
   useEffect(() => {
     if (totalAmt <= 200) {
       setShippingCharge(30);
     } else if (totalAmt <= 400) {
       setShippingCharge(25);
-    } else if (totalAmt > 401) {
+    } else {
       setShippingCharge(20);
     }
   }, [totalAmt]);
+
+  const handleCheckout = async () => {
+    if (!customerId) {
+      console.error("Customer ID is undefined. Ensure the user is logged in.");
+      return;
+    }
+  
+    try {
+      // Fetch customer details
+      const customerResponse = await axios.get(
+        `http://localhost:8080/customers/${customerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace with your token logic
+          },
+        }
+      );
+  
+      const customer = customerResponse.data;
+      const user = customer.user;
+  
+      // Construct the payload
+      const orderDetails = {
+        contactName: `${user.firstName} ${user.lastName}`, // Use customer's name
+        contactMail: user.email, // Use customer's email
+        contactNumber: user.mobileNo, // Use customer's mobile number
+        shippingAddress: {
+          street: user.address || "123 Main Street", // Use customer's address
+          city: user.city || "Default City",
+          state: user.country || "Default State",
+          zipCode: "12345", // Add zipCode if available in your data
+        },
+        payMethod: "Card", // Replace with actual payment method, e.g., Card, PayPal
+        deliverDate: null, // Replace with actual delivery date if applicable
+        orderItems: products.map((item) => ({
+          productID: item.originalProductId,
+          productName: item.name,
+          size: item.size,
+          colors: [
+            {
+              color: item.color,
+              count: item.quantity,
+            },
+          ],
+          mainImgUrl: item.image, // Assuming the image URL is stored in `image`
+        })),
+      };
+  
+      console.log("Order Details Payload:", orderDetails); // Debug the payload
+  
+      // Send the order creation request
+      const response = await axios.post(
+        `http://localhost:8080/orders/${customerId}`,
+        orderDetails,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      navigate("/checkout", { state: { orderId: response.data.id, cartItems: products } }); // Navigate to the success page
+    } catch (error) {
+      console.error("Error creating order:", error.response?.data || error);
+    }
+  };
+  
+
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Cart" />
@@ -81,14 +156,12 @@ const Cart = () => {
                 </p>
               </div>
               <div className="flex justify-end">
-              <Link
-                to="/checkout"
-                state={{ cartItems: products }}
-              >
-                  <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
-                    Proceed to Checkout
-                  </button>
-                </Link>
+                <button
+                  onClick={handleCheckout}
+                  className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300"
+                >
+                  Proceed to Checkout
+                </button>
               </div>
             </div>
           </div>
