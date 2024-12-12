@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: "Albert Sans", sans-serif;
+}
+
+.fullBody {
+    margin: 10px 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.slideMenu {
+    margin: 30px 400px 0px 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.slideMenuItem {
+    font-size: 1.4rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.slideMenuItem.active {
+    color: #6A1B9A;
+    opacity: 1;
+}
+
+.loginForm {
+    width: 40%;
+    margin: 0 auto;
+    display: block;
+}
+
+.formContainer{
+    margin: 0px;
+}
+
+.contact {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    font-size: 0.8rem;
+    margin: 2.9px 0;
+    padding: 12px;
+    border-radius: 1px;
+    border: 1px solid #ccc;
+    width: 100%; /* Prevent input fields from collapsing */
+    box-sizing: border-box; /* Includes padding and border in width */
+}
+
+.name {
+    display: flex;
+    gap: 5px;
+}
+
+.fName, .lName, .country, .city {
+    width: 50%;
+}
+
+.addressTitle {
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin: 5px 0px;
+}
+
+/* Button styles */
+.signUpButton, .signInButton {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: space-around;
+    font-weight: 500;
+    background-color: #CAB3DA;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    color: #000;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.signUpButton {
+    margin: 20px 0px;
+}
+
+.signUpButton::after, .signInButton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #6A1B9A;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.signUpButton:hover::after, .signInButton:hover::after {
+    transform: scaleX(1);
+}
+
+.signUpButton:hover, .signInButton:hover {
+    color: #fff;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+hr {
+    opacity: 1;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.altSign {
+    font-size: 0.6rem;
+    text-align: center;
+}
+
+.altSignContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.social {
+    width: 70px;
+    height: 70px;
+}
+
+.welcome {
+    font-size: 3.5rem;
+    font-weight: 320;
+    line-height: 1;
+}
+
+.welcomeAll {
+    margin: 30px 0px;
+}
+
+.forgotPassword {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.6rem;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin: 0;
+}
+
+.formErrors {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: red;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.logoo {
+    width: 180px;
+    height: auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    * {
+        font-family: "Albert Sans", sans-serif;
+    }
+    
+    .fullBody {
+        margin: 10px 0px;
+        display: flex;
+        flex-direction: column;
+    }
+    .slideMenu {
+        margin: 30px 0px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .loginForm {
+        width: 80%;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    .slideMenuItem {
+        font-size: 1.4rem;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: color 0.3s ease, opacity 0.3s ease;
+    }
+            
+    .contact {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    input {
+        font-size: 0.8rem;
+        margin: 2.9px 0;
+        padding: 12px;
+        border-radius: 1px;
+        border: 1px solid #ccc;
+    }
+    
+    .name {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .fName, .lName, .country, .city {
+        width: 100%;
+    }
+    
+    .addressTitle {
+        font-weight: 500;
+        font-size: 0.8rem;
+        margin: 5px 0px;
+    }
+    
+    .signUpButton, .signInButton {
+        display: flex;
+        align-items: center;
+        width: 50%;
+        justify-content: space-around;
+        font-weight: 500;
+        background-color: #CAB3DA;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        color: #000;
+        overflow: hidden;
+        transition: color 0.3s ease;
+        z-index: 1;
+    }
+    
+    .signUpButton {
+        margin: 20px 0px;
+    }
+    
+    .signUpButton::after, .signInButton::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #6A1B9A;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        z-index: -1;
+    }
+    
+    .signUpButton:hover::after, .signInButton:hover::after {
+        transform: scaleX(1);
+    }
+    
+    .signUpButton:hover, .signInButton:hover {
+        color: #fff;
+    }
+    
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    
+    hr {
+        opacity: 1;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .welcome {
+        font-size: 3rem;
+        font-weight: 320;
+        line-height: 1;
+    }
+    
+    .welcomeAll {
+        margin: 0px 0px;
+    }
+    
+    .imageContainer {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .logoo {
+        width: 180px;
+        height: auto;
+    }
+}

@@ -5,10 +5,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    volumes:
+      - ./backend/src/main/resources/gcsServiceAccountKey.json:/app/src/main/resources/gcsServiceAccountKey.json
+
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/velvetbloom
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://vbuser:Abcd%401234@velvet-bloom-cluster.mvpwx.mongodb.net/velvetbloom
+      - SPRING_PROFILES_ACTIVE=default
 
   frontend:
     build:
@@ -18,13 +22,14 @@ services:
       - "3000:80"
     environment:
       - NEXT_PUBLIC_BACKEND_URL=http://backend:8080
-
-  mongo:
-    image: mongo:latest
+  
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
     ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+      - "3001:80" # Admin dashboard on port 3001
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8080
+      
 
-volumes:
-  mongo-data:
