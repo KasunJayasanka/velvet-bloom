@@ -1,0 +1,17 @@
+[
+    {
+      "id": "1",
+      "name": "Product 1",
+      "unitPrice": 100,
+      "categories": ["Category 1"],
+      "variety": [{ "size": "M" }]
+    },
+    {
+      "id": "2",
+      "name": "Product 2",
+      "unitPrice": 200,
+      "categories": ["Category 2"],
+      "variety": [{ "size": "L" }]
+    }
+  ]
+  
