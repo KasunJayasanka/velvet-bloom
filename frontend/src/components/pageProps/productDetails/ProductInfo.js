@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/velvetSlice";
 
 const ProductInfo = ({ productInfo }) => {
-
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -17,19 +16,18 @@ const ProductInfo = ({ productInfo }) => {
       setError("Please select a size before adding to the cart.");
       return;
     }
-    
+
     if (!selectedColor) {
       setError("Please select a color before adding to the cart.");
       return;
     }
-    
+
     if (productInfo.productCount <= 0) {
       setError("This item is currently out of stock.");
       return;
     }
-    
+
     setError(""); // Clear previous errors
-    // Proceed to add item to cart logic
     const productId = productInfo.id || "undefined";
 
     const cartItem = {
@@ -60,6 +58,11 @@ const ProductInfo = ({ productInfo }) => {
 
     return Array.isArray(productInfo.Size) ? productInfo.Size : [];
   })();
+
+  // Parse unique colors
+  const uniqueColors = productInfo.color
+    ? Array.from(new Set(productInfo.color.split(",").map((color) => color.trim())))
+    : [];
 
   // Disable button if conditions are not met
   const isAddToCartDisabled =
@@ -95,44 +98,35 @@ const ProductInfo = ({ productInfo }) => {
       </div>
 
       {/* Color Selection */}
-      {productInfo.color && (
+      {uniqueColors.length > 0 && (
         <div>
           <p className="font-medium text-lg mb-2">Select Color:</p>
           <div className="flex gap-2">
-            {productInfo.color.split(",").map((color) => {
-              const trimmedColor = color.trim();
-              return (
-                <button
-                  key={trimmedColor}
-                  onClick={() => setSelectedColor(trimmedColor)}
-                  className={`
-                    w-8 h-8 rounded-full border-2 transition-all duration-300
-                    ${selectedColor === trimmedColor 
-                      ? 'ring-2 ring-primeColor scale-110' 
-                      : 'hover:border-primeColor'}
-                  `}
-                  style={{
-                    backgroundColor: trimmedColor.toLowerCase(),
-                    borderColor:
-                      selectedColor === trimmedColor ? trimmedColor : "#E5E7EB",
-                  }}
-                  title={trimmedColor}
-                />
-              );
-            })}
+            {uniqueColors.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={`
+                  w-8 h-8 rounded-full border-2 transition-all duration-300
+                  ${selectedColor === color 
+                    ? 'ring-2 ring-primeColor scale-110' 
+                    : 'hover:border-primeColor'}
+                `}
+                style={{
+                  backgroundColor: color.toLowerCase(),
+                  borderColor: selectedColor === color ? color : "#E5E7EB",
+                }}
+                title={color}
+              />
+            ))}
           </div>
         </div>
       )}
 
-      <p className="text-s ">{productInfo.productCount} left</p>
+      <p className="text-s">{productInfo.productCount} left</p>
 
       {/* Error Display */}
-      {error && (
-        <div className="text-red-500 text-sm mt-2">
-          {error}
-        </div>
-      )}
-
+      {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
       {/* Add to Cart Button */}
       <button

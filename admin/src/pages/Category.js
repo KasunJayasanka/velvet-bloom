@@ -17,25 +17,21 @@ function Category() {
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [categoryToEdit, setCategoryToEdit] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const navigate = useNavigate();  
 
-  // Sample categories for a clothing shop
-  const sampleCategories = Array.from({ length: 6 }, (_, index) => ({
-    categoryID: `category${index + 1}`,
-    category_name: [
-      'Men\'s Clothing', 'Women\'s Clothing', 'Kids\' Clothing',
-      'Accessories', 'Footwear', 'Winter Wear'
-    ][index],
-    description: `Description for ${['Men\'s Clothing', 'Women\'s Clothing', 'Kids\' Clothing', 'Accessories', 'Footwear', 'Winter Wear'][index]}`,
-    NumberOfProducts: Math.floor(Math.random() * 100),
-  }));
-
   useEffect(() => {
-    //fetch this data from API.
-    setCategories(sampleCategories);
-    setFilteredCategories(sampleCategories); 
+    async function fetchCategories() {
+      try {
+        const response = await axios.get('http://localhost:8080/categories/with-product-count');        
+        setCategories(response.data);
+        setFilteredCategories(response.data); 
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+    fetchCategories();
   }, []);
 
   // Filter categories based on the search category name
@@ -68,7 +64,13 @@ function Category() {
   // Handle category deletion
   const handleDeleteCategory = async () => {
     try {
-      await axios.delete(`/api/categories/${categoryToDelete.categoryID}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:8080/categories/${categoryToDelete.categoryID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert('Category deleted successfully!');
       setCategories(categories.filter((category) => category.categoryID !== categoryToDelete.categoryID));
       setFilteredCategories(filteredCategories.filter((category) => category.categoryID !== categoryToDelete.categoryID));
       handleCloseDeleteDialog();
@@ -88,11 +90,23 @@ function Category() {
     setCategoryToEdit(null);
     setOpenEditDialog(false);
   };
-
+ 
   // Handle category update
   const handleUpdateCategory = async () => {
     try {
-      await axios.put(`/api/categories/${categoryToEdit.categoryID}`, categoryToEdit);
+      const formData = new FormData();
+      const sendCategory ={
+        name:categoryToEdit.category_name,
+        description:categoryToEdit.description
+      }
+      formData.append('category', JSON.stringify(sendCategory));
+      const token = localStorage.getItem("token");
+      await axios.patch(`http://localhost:8080/categories/${categoryToEdit.categoryID}`, formData, {
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`
+          },
+      });
       setCategories(categories.map((category) =>
         category.categoryID === categoryToEdit.categoryID ? categoryToEdit : category
       ));
@@ -100,6 +114,7 @@ function Category() {
         category.categoryID === categoryToEdit.categoryID ? categoryToEdit : category
       ));
       handleCloseEditDialog();
+      alert('Product added successfully!');
     } catch (error) {
       console.error('Error updating category:', error);
     }
@@ -142,7 +157,7 @@ function Category() {
             color="primary"
             onClick={handleAddCategory}
           >
-            Add Category
+            Add Category 
           </Button>
         </Grid>
       </Grid>
@@ -160,16 +175,16 @@ function Category() {
           </TableHead>
           <TableBody>
             {filteredCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category) => (
-              <TableRow key={category.categoryID}>
+              <TableRow key={category.categoryID} data-testid="category-row">
                 <TableCell>{category.category_name}</TableCell>
                 <TableCell>{category.description}</TableCell>
-                <TableCell>{category.NumberOfProducts}</TableCell>
+                <TableCell>{category.numberOfProducts}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleOpenEditDialog(category)}>
+                  <IconButton onClick={() => handleOpenEditDialog(category)} data-testid={`EditIcon`} >
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleOpenDeleteDialog(category)}>
-                    <DeleteIcon color="#9E4BDC" />
+                  <IconButton onClick={() => handleOpenDeleteDialog(category)} data-testid={`DeleteIcon`}>
+                    <DeleteIcon color="error" />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -180,7 +195,7 @@ function Category() {
 
       {/* Pagination */}
       <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[5, 10, 20]}
         component="div"
         count={filteredCategories.length}
         rowsPerPage={rowsPerPage}
@@ -217,16 +232,16 @@ function Category() {
           <TextField
             fullWidth
             label="Number of Products"
-            value={categoryToEdit?.NumberOfProducts || ''}
+            value={categoryToEdit?.numberOfProducts || ''}
             disabled
             sx={{ marginTop: 2 }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseEditDialog} color="primary">
+          <Button onClick={handleCloseEditDialog} color="primary" data-testid="CancelButton">
             Cancel
           </Button>
-          <Button onClick={handleUpdateCategory} color="secondary">
+          <Button onClick={handleUpdateCategory} color="secondary" data-testid="SaveButton">
             Save
           </Button>
         </DialogActions>

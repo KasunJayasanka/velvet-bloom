@@ -3,11 +3,19 @@ package com.store.velvetbloom.service;
 import com.store.velvetbloom.model.User;
 import com.store.velvetbloom.repository.UserRepository;
 import com.store.velvetbloom.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.security.SignatureException;
 import java.util.Optional;
+
+import static javax.crypto.Cipher.SECRET_KEY;
 
 @Service
 public class AuthService {
@@ -20,6 +28,9 @@ public class AuthService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Value("${jwt.secret}")
+    private String secret;
 
     public String login(String email, String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
@@ -57,6 +68,39 @@ public class AuthService {
 
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    /**
+     * Verifies the JWT token, extracts claims, and constructs a User object.
+     * @param token The JWT token to verify.
+     * @return User object containing extracted user information.
+     * @throws RuntimeException if the token is invalid or expired.
+     */
+    public User verifyToken(String token) {
+        try {
+            // Parse and validate the token
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            // Extract information from the claims
+            String role = claims.get("role", String.class); // Custom claim for role
+
+            // Construct a User object
+            User user = new User();
+            user.setRole(role);
+
+            return user;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Token validation failed", e);
+        }
     }
     
 }

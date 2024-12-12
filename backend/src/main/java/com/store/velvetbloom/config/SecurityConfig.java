@@ -84,7 +84,7 @@ public class SecurityConfig {
                         .requestMatchers("/orders/**").permitAll()
                         .requestMatchers("/inventories/**").permitAll()
                         .requestMatchers("/payhere/**").permitAll()
-                        .requestMatchers("/user/**").hasRole("USER") // Restrict /user endpoints to USER role
+                        .requestMatchers("/user/**").hasRole("USER")// Restrict /user endpoints to USER role
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

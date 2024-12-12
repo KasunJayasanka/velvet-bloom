@@ -118,6 +118,7 @@ public class AuthController {
         return ResponseEntity.ok(newAdmin);
     }
 
+    
     @PostMapping("/create-first-admin")
     public ResponseEntity<?> createFirstAdmin(@RequestBody User user) {
         
@@ -125,6 +126,19 @@ public class AuthController {
         user.setRole("ADMIN");
         User admin = authService.signup(user);
         return ResponseEntity.ok(admin);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateAdminRole(@RequestHeader("Authorization") String token) {
+        try {
+            User user = authService.verifyToken(token); // Implement token verification logic
+            if ("ADMIN".equals(user.getRole())) {
+                return ResponseEntity.ok("Access granted");
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+        }
     }
     
 }

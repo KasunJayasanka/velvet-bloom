@@ -78,8 +78,8 @@ const OrderTracking = () => {
                     <ProgressBar
                         steps={[
                             { label: 'Ordered', date: new Date(orderDetails.orderDate).toLocaleDateString(), completed: true },
-                            { label: 'Ready To Ship', date: '30th Oct 2024', completed: orderDetails.status === "Ready To Ship" || orderDetails.status === "shipped" },
-                            { label: 'Shipped', date: '7th Nov 2024', completed: orderDetails.status === "shipped" },
+                            { label: 'Ready To Ship', date: '2th Dec 2024', completed: orderDetails.status === "Ready To Ship" || orderDetails.status === "shipped" },
+                            // { label: 'Shipped', date: '7th Nov 2024', completed: orderDetails.status === "shipped" },
                             { label: 'Estimated Delivery', date: new Date(orderDetails.deliverDate).toLocaleDateString(), completed: false },
                         ]}
                     />

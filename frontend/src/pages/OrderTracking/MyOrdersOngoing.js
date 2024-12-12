@@ -68,7 +68,6 @@ const MyOrdersOngoing = () => {
         // Filter ongoing orders based on their status
         const ongoingOrders = allOrders.filter(
           (order) =>
-            order.status === "shipped" ||
             order.status === "Ready To Ship" ||
             order.status === "new"
         );

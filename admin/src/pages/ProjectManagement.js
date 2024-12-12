@@ -8,18 +8,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-// Generate mock data (50 clothing items) with categories
-const mockCategories = ['Shirts', 'Pants', 'Dresses', 'Accessories', 'Shoes'];
-const mockProducts = Array.from({ length: 50 }, (_, i) => ({
-  _id: `product_${i + 1}`,
-  productName: `${mockCategories[Math.floor(Math.random() * mockCategories.length)]} ${i + 1}`,
-  AvailableCount: Math.floor(Math.random() * 100),
-  LowStockCount: 20,
-  unitPrice: (Math.random() * 100 + 10).toFixed(2), 
-  categories: [mockCategories[Math.floor(Math.random() * mockCategories.length)]], 
-}));
-
+//import { productList } from '../TemporaryData/productManagementData';
+ 
+function transformProductData(productList) {
+  return productList.map(product => ({
+    _id:product.id,
+    productName: product.productName,
+    AvailableCount: product.productCount,
+    LowStockCount: product.lowStockCount,
+    unitPrice: product.unitPrice,
+    categories: product.categories
+  }));
+}
+ 
 function ProjectManagement() {
   const navigate = useNavigate();
   const [stats, setStats] = useState({
@@ -28,11 +29,11 @@ function ProjectManagement() {
     inStock: 30,
     lowStock: 15,
     outOfStock: 5,
-  });
+  }); 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchName, setSearchName] = useState('');
   const [searchCategory, setSearchCategory] = useState('');
   const [status, setStatus] = useState('All');
@@ -43,7 +44,12 @@ function ProjectManagement() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const response = await axios.get('/api/dashboard-stats');
+        const token ='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzMzMDM3MzAwLCJleHAiOjE3MzMxMjM3MDB9.FeTUTXVmcp6hw4dhatr5x0JXvGTEt55z8phufnNLDS0';
+        const response =await axios.get(`http://localhost:8080/inventories/stats`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setStats(response.data);
       } catch (error) {
         console.error('Error fetching dashboard stats:', error);
@@ -56,13 +62,14 @@ function ProjectManagement() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const paginatedProducts = mockProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-        setProducts(mockProducts); 
+        const response = await axios.get('http://localhost:8080/products');        
+        const productList = response.data;
+        const ArrangedProducts = transformProductData(productList);
+        const paginatedProducts = ArrangedProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        setProducts(ArrangedProducts); 
         setFilteredProducts(paginatedProducts); 
       } catch (error) {
         console.error('Error fetching products:', error);
-        setProducts(mockProducts); 
-        setFilteredProducts(mockProducts);
       }
     }
     fetchProducts();
@@ -83,7 +90,6 @@ function ProjectManagement() {
         category.toLowerCase().includes(searchCategory.toLowerCase())
       );
       const matchesStatus = status === 'All' || getStatus(product.AvailableCount, product.LowStockCount) === status;
-      
       return matchesName && matchesCategory && matchesStatus;
     });
     setFilteredProducts(filtered);
@@ -111,10 +117,16 @@ function ProjectManagement() {
   // Handle product deletion
   const handleDeleteProduct = async () => {
     try {
-      await axios.delete(`/api/products/${productToDelete}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:8080/products/${productToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setProducts(products.filter((product) => product._id !== productToDelete));
       setFilteredProducts(filteredProducts.filter((product) => product._id !== productToDelete));
       handleCloseDeleteDialog();
+      alert('Product deleted successfully!');
     } catch (error) {
       console.error('Error deleting product:', error);
     }
@@ -201,17 +213,17 @@ function ProjectManagement() {
           </TableHead>
           <TableBody>
             {filteredProducts.map((product) => (
-              <TableRow key={product._id}>
+              <TableRow key={product._id} data-testid="product-row">
                 <TableCell>{product.productName}</TableCell>
                 <TableCell>{product.AvailableCount}</TableCell>
                 <TableCell>{product.LowStockCount}</TableCell>
                 <TableCell>{product.unitPrice}</TableCell>
                 <TableCell>{getStatus(product.AvailableCount, product.LowStockCount)}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => navigate(`/edit-product/${product._id}`)}>
+                  <IconButton onClick={() => navigate(`/edit-product/${product._id}`)} data-testid="EditIcon">
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleOpenDeleteDialog(product._id)}>
+                  <IconButton onClick={() => handleOpenDeleteDialog(product._id)} data-testid="DeleteIcon">
                     <DeleteIcon color="error" />
                   </IconButton>
                 </TableCell>
@@ -223,7 +235,7 @@ function ProjectManagement() {
 
       {/* Pagination */}
       <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[5, 10, 20]}
         component="div"
         count={filteredProducts.length}
         rowsPerPage={rowsPerPage}
