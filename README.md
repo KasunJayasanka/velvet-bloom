@@ -15,6 +15,12 @@ Velvet Bloom is a monolithic e-commerce platform for a clothing store, featuring
 
 ---
 
+## System Architecture 
+
+![Velvet-Bloom System Architecture](./velvet-bloom-system-architecture.jpeg)
+
+---
+
 ## Prerequisites
 
 Please ensure the following tools are installed on your machine:
